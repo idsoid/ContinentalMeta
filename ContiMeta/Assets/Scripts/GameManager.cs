@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return instance; } }
     private void Awake()
     {
+        navMeshSurface.BuildNavMesh();
         if (instance != null && instance != this)
         {
             Destroy(this.gameObject);
@@ -34,7 +35,6 @@ public class GameManager : MonoBehaviour
     {
         navMeshSurface.BuildNavMesh();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -47,6 +47,10 @@ public class GameManager : MonoBehaviour
                 ResetScan();
             }
         }
+    }
+    void FixedUpdate()
+    {
+        navMeshSurface.BuildNavMesh();   
     }
 
     public void PlayerPoseDetection(string playerPose)
@@ -74,18 +78,16 @@ public class GameManager : MonoBehaviour
         {
             case "GO":
                 meshRenderer.material.color = Color.green;
-                robotMovement.SetState("");
                 break;
             case "STOP":
                 meshRenderer.material.color = Color.red;
-                robotMovement.SetState("");
                 break;
             case "FOLLOW ME":
                 meshRenderer.material.color = Color.yellow;
-                robotMovement.SetState("");
                 break;
             default:
                 break;
         }
+        robotMovement.SetState(currentPose);
     }
 }

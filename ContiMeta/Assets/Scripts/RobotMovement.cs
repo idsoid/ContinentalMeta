@@ -8,7 +8,8 @@ public class RobotMovement : MonoBehaviour
     [SerializeField]
     private List<Transform> waypoints;
     private int currWaypoint = 0;
-    private Transform target;
+    [SerializeField]
+    private Transform player;
     private enum States
     {
         DELIVER,
@@ -27,7 +28,8 @@ public class RobotMovement : MonoBehaviour
     }
     void Update()
     {
-        
+        Debug.Log(meshAgent.pathStatus);
+        Debug.Log(currentState);
     }
     void FixedUpdate()
     {
@@ -39,19 +41,49 @@ public class RobotMovement : MonoBehaviour
         switch (currentState)
         {
             case States.DELIVER:
+                //Check if near/at destination
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
-                    currWaypoint++;
-                    if (currWaypoint >= waypoints.Count)
+                    //Path blocked
+                    if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial)
                     {
-                        currWaypoint = 0;
+                        currentState = States.STUCK;
+                        meshAgent.speed = 0;
+                    }
+                    //Continue path
+                    else
+                    {
+                        currWaypoint++;
+                        if (currWaypoint == waypoints.Count)
+                        {
+                            currWaypoint = 0;
+                        }
                     }
                 }
                 Move(waypoints[currWaypoint]);
                 break;
             case States.STOP:
+                Debug.Log("stopped");
                 break;
             case States.STUCK:
+                //Check if path is free
+                if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    currentState = States.DELIVER;
+                    meshAgent.speed = 2;
+                }
+                break;
+            case States.FOLLOW:
+                //Path blocked
+                if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial)
+                {
+                    currentState = States.STUCK;
+                    meshAgent.speed = 0;
+                }
+                else
+                {
+                    Move(player);
+                }
                 break;
             default:
                 break;
@@ -65,7 +97,17 @@ public class RobotMovement : MonoBehaviour
     {
         switch (state)
         {
-            
+            case "GO":
+                meshAgent.speed = 2;
+                currentState = States.DELIVER;
+                break;
+            case "STOP":
+                meshAgent.speed = 0;
+                currentState = States.STOP;
+                break;
+            case "FOLLOW ME":
+                currentState = States.FOLLOW;
+                break;
             default:
                 break;
         }
