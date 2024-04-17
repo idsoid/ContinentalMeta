@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         if (startTimer)
         {
             scanTimer += Time.deltaTime;
-            if (scanTimer >= 1.75f)
+            if (scanTimer >= 1.25f)
             {
                 SendCommand();
                 ResetScan();
