@@ -20,10 +20,13 @@ MonoBehaviour:
     isPrivate: 1
     createdAt: 2024-04-11T01:27:25-0700
     trainingStatus: 1
-    lastTrainDuration: 16
-    lastTrainedAt: 2024-04-11T01:56:59-0700
-    nextTrainAt: 2024-04-11T01:56:43-0700
+    lastTrainDuration: 73
+    lastTrainedAt: 2024-04-18T01:46:13-0700
+    nextTrainAt: 2024-04-18T01:45:00-0700
     intents:
+    - id: 1177999283565567
+      name: user_command
+      entities: []
     - id: 986954443045878
       name: wit$confirmation
       entities: []
@@ -561,7 +564,7 @@ MonoBehaviour:
   - Oculus.Voice.Demo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - Meta.WitAi.Samples, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   relaxedResolution: 0
-  _lastRefreshSeconds: 1713151765.125722
+  _lastRefreshSeconds: 1713430330.4428828
 --- !u!114 &458087303209384169
 MonoBehaviour:
   m_ObjectHideFlags: 0
