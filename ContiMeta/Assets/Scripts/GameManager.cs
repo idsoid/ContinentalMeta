@@ -78,21 +78,13 @@ public class GameManager : MonoBehaviour
     }
     public void SendCommand(string command)
     {
-        switch (command)
+        meshRenderer.material.color = command switch
         {
-            case "GO":
-                meshRenderer.material.color = Color.green;
-                break;
-            case "STOP":
-                meshRenderer.material.color = Color.red;
-                break;
-            case "FOLLOW":
-                meshRenderer.material.color = Color.yellow;
-                break;
-            default:
-                meshRenderer.material.color = Color.grey;
-                break;
-        }
-        robotMovement.SetState(currentPose);
+            "GO" => Color.green,
+            "STOP" => Color.red,
+            "FOLLOW" => Color.yellow,
+            _ => Color.white,
+        };
+        robotMovement.SetState(command);
     }
 }

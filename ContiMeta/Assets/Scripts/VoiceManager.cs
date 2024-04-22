@@ -20,7 +20,7 @@ public class VoiceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log("voice active: " + voiceExp.Active);
     }
 
     private IEnumerator VoiceCheck()
@@ -40,6 +40,6 @@ public class VoiceManager : MonoBehaviour
     {
         Debug.Log("voice received: " + info[0]);
         tmp.text = "value: " + info[0];
-        gameManager.SendCommand(info[0]);
+        gameManager.SendCommand(info[0].ToUpper());
     }
 }
