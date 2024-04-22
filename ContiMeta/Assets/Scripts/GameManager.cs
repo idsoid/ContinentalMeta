@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private RobotMovement robotMovement;
     public NavMeshSurface navMeshSurface;
     public float scanTimer = 0.0f;
-    public bool playerSpotted, startTimer, poseStopped;
+    public bool playerInRange, playerSpotted, startTimer;
     public string currentPose;
 
     // Start is called before the first frame update
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
             scanTimer += Time.deltaTime;
             if (scanTimer >= 1f)
             {
-                SendCommand();
+                SendCommand(currentPose);
                 ResetScan();
             }
         }
@@ -72,9 +72,13 @@ public class GameManager : MonoBehaviour
     {
         playerSpotted = check;
     }
-    private void SendCommand()
+    public void SetPlayerInRange(bool check)
     {
-        switch (currentPose)
+        playerInRange = check;
+    }
+    public void SendCommand(string command)
+    {
+        switch (command)
         {
             case "GO":
                 meshRenderer.material.color = Color.green;
@@ -82,10 +86,11 @@ public class GameManager : MonoBehaviour
             case "STOP":
                 meshRenderer.material.color = Color.red;
                 break;
-            case "FOLLOW ME":
+            case "FOLLOW":
                 meshRenderer.material.color = Color.yellow;
                 break;
             default:
+                meshRenderer.material.color = Color.grey;
                 break;
         }
         robotMovement.SetState(currentPose);

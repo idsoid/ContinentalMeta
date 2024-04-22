@@ -39,6 +39,7 @@ public class FieldOfView : MonoBehaviour
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
         if (rangeChecks.Length > 0)
         {
+            gameManager.SetPlayerInRange(true);
             Transform target = rangeChecks[0].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
 
@@ -53,6 +54,7 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
+        gameManager.SetPlayerInRange(false);
         gameManager.SetPlayerSpotted(false);
     }
 }

@@ -105,7 +105,7 @@ public class RobotMovement : MonoBehaviour
                 meshAgent.speed = 0;
                 currentState = States.STOP;
                 break;
-            case "FOLLOW ME":
+            case "FOLLOW":
                 meshAgent.speed = 1;
                 currentState = States.FOLLOW;
                 break;
