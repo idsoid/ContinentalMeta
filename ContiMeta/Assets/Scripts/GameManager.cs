@@ -76,6 +76,10 @@ public class GameManager : MonoBehaviour
     {
         playerInRange = check;
     }
+    public bool GetPlayerInRange()
+    {
+        return playerInRange;
+    }
     public void SendCommand(string command)
     {
         meshRenderer.material.color = command switch

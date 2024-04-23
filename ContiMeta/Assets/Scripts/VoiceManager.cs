@@ -38,6 +38,11 @@ public class VoiceManager : MonoBehaviour
     }
     public void PlayerVoiceDetection(string[] info)
     {
+        //if (!gameManager.GetPlayerInRange())
+        //{
+        //    return;
+        //}
+
         Debug.Log("voice received: " + info[0]);
         tmp.text = "value: " + info[0];
         gameManager.SendCommand(info[0].ToUpper());

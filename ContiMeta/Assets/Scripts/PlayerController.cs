@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject canvasCommandPopup;
+    public bool menuActive;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        menuActive = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (OVRInput.GetUp(OVRInput.Button.One))
+        if (OVRInput.GetDown(OVRInput.Button.Three))
         {
-
+            ToggleMenu();
         }
+
+        canvasCommandPopup.SetActive(menuActive);
+    }
+
+    public void ToggleMenu()
+    {
+        menuActive = !menuActive;
     }
 }
