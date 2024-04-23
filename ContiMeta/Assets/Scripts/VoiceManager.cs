@@ -25,7 +25,7 @@ public class VoiceManager : MonoBehaviour
 
     private IEnumerator VoiceCheck()
     {
-        WaitForSecondsRealtime wait = new WaitForSecondsRealtime(0.5f);
+        WaitForSecondsRealtime wait = new(0.5f);
 
         while (true)
         {
