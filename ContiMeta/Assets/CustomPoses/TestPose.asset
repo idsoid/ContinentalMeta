@@ -10,28 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cfe1df7ed391a24fbe2a2d275e81b06, type: 3}
-  m_Name: MenuPose
+  m_Name: TestPose
   m_EditorClassIdentifier: 
-  _shapeName: MenuPose
+  _shapeName: TestPose
   _thumbFeatureConfigs:
-    _value:
-    - _mode: 1
-      _feature: 0
-      _state: 2
+    _value: []
   _indexFeatureConfigs:
-    _value:
-    - _mode: 1
-      _feature: 0
-      _state: 2
-    - _mode: 0
-      _feature: 1
-      _state: 4
-    - _mode: 1
-      _feature: 2
-      _state: 7
-    - _mode: 0
-      _feature: 3
-      _state: 9
+    _value: []
   _middleFeatureConfigs:
     _value:
     - _mode: 1

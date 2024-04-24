@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public float scanTimer = 0.0f;
     public bool playerInRange, playerSpotted, startTimer;
     public string currentPose;
+    public bool menuActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -79,6 +80,14 @@ public class GameManager : MonoBehaviour
     public bool GetPlayerInRange()
     {
         return playerInRange;
+    }
+    public void ToggleMenu()
+    {
+        menuActive = !menuActive;
+    }
+    public bool GetMenuActive()
+    {
+        return menuActive;
     }
     public void SendCommand(string command)
     {

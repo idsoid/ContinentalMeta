@@ -5,13 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject canvasCommandPopup;
-    public bool menuActive;
+    private GameObject canvasCommandPopupController, canvasCommandPopupHand;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        menuActive = false;
+        gameManager = GameManager.Instance;
     }
 
     // Update is called once per frame
@@ -19,14 +19,29 @@ public class PlayerController : MonoBehaviour
     {
         if (OVRInput.GetDown(OVRInput.Button.Three))
         {
-            ToggleMenu();
+            gameManager.ToggleMenu();
+        }
+        
+        if (OVRPlugin.GetConnectedControllers() == OVRPlugin.Controller.Touch)
+        {
+            Debug.Log("controllers enabled");
+            canvasCommandPopupController.SetActive(gameManager.GetMenuActive());
+            canvasCommandPopupHand.SetActive(false);
+        }
+        else if (OVRPlugin.GetConnectedControllers() == OVRPlugin.Controller.Hands)
+        {
+            Debug.Log("hands enabled");
+            canvasCommandPopupHand.SetActive(gameManager.GetMenuActive());
+            canvasCommandPopupController.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("nothing enabled");
+            canvasCommandPopupController.SetActive(false);
+            canvasCommandPopupHand.SetActive(false);
         }
 
-        canvasCommandPopup.SetActive(menuActive);
-    }
-
-    public void ToggleMenu()
-    {
-        menuActive = !menuActive;
+        //controller info - position: 0, 0.125f, 0.075f; rotation: 15, 0, 0;
+        //hand info - position: 0.2f, 0, 0.1f; rotation: -2.5, 150, 110;
     }
 }
