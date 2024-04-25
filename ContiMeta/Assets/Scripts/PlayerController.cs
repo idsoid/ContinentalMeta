@@ -16,15 +16,14 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        if (OVRInput.GetDown(OVRInput.Button.Three))
-        {
-            gameManager.ToggleMenu();
-        }
-        
+    {     
         if (OVRPlugin.GetConnectedControllers() == OVRPlugin.Controller.Touch)
         {
             Debug.Log("controllers enabled");
+            if (OVRInput.GetDown(OVRInput.Button.Three))
+            {
+                gameManager.ToggleMenu();
+            }
             canvasCommandPopupController.SetActive(gameManager.GetMenuActive());
             canvasCommandPopupHand.SetActive(false);
         }
