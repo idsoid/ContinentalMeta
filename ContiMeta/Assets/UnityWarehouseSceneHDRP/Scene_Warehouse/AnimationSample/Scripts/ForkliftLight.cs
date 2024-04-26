@@ -53,10 +53,10 @@ namespace UnityWarehouseSceneHDRP
 			{
 				StartCoroutine(WinkerLeftCoroutine());
 			}
-			else
-			{
-				_light.material.SetFloat("_Winker_Left_On", 0);
-			}
+			//else
+			//{
+			//	_light.material.SetFloat("_Winker_Left_On", 0);
+			//}
 		}
 		private IEnumerator WinkerLeftCoroutine()
 		{
