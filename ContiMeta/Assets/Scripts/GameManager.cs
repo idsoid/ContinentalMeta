@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(NavMeshRoutine());
+        //StartCoroutine(NavMeshRoutine());
     }
     // Update is called once per frame
     void Update()
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator NavMeshRoutine()
     {
-        WaitForSecondsRealtime wait = new(0.9f);
+        WaitForSecondsRealtime wait = new(1f);
 
         while (true)
         {
