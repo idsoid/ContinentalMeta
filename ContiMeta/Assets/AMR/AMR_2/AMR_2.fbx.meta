@@ -97,16 +97,6 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Light.003
-    second: {fileID: 2100000, guid: d8fd47967c3f05349b1b8b35139361b2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 5a143ea3214927147b6d54810bceb69d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Material.001
     second: {fileID: 2100000, guid: 9e1d5307c8ad5f54aa5a60f3f4754230, type: 2}
   - first:
@@ -117,13 +107,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Metal.002
-    second: {fileID: 2100000, guid: 0de2950b71777fb47a64abd46bb29188, type: 2}
+      name: Material.003
+    second: {fileID: 2100000, guid: ff0e7661e0365a742bb0ca6c6ce2bbcc, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Orange_Metal
-    second: {fileID: 2100000, guid: 4fc295c35e1a60c4b899cf42c59600a1, type: 2}
+      name: Metal.002
+    second: {fileID: 2100000, guid: 0de2950b71777fb47a64abd46bb29188, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -192,7 +182,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1
