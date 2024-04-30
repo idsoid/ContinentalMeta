@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(NavMeshRoutine());
+        
     }
     // Update is called once per frame
     void Update()
@@ -49,21 +49,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    void FixedUpdate()
-    {
-        //navMeshSurface.BuildNavMesh();   
-    }
 
-    private IEnumerator NavMeshRoutine()
-    {
-        WaitForSecondsRealtime wait = new(1f);
-
-        while (true)
-        {
-            yield return wait;
-            navMeshSurface.BuildNavMesh();
-        }
-    }
     public void PlayerPoseDetection(string playerPose)
     {
         if (!playerSpotted)
@@ -106,8 +92,9 @@ public class GameManager : MonoBehaviour
             "GO" => Color.green,
             "STOP" => Color.red,
             "FOLLOW" => Color.yellow,
-            _ => Color.white,
+            "STATUS" => Color.blue,
+            _ => Color.black,
         };
-        robotMovement.SetState(command);
+        robotMovement.ReceiveCommand(command);
     }
 }

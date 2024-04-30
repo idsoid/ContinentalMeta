@@ -30,6 +30,7 @@ public class RobotMovement : MonoBehaviour
     {
         Debug.Log(meshAgent.pathStatus);
         Debug.Log(currentState);
+        Debug.Log(meshAgent.steeringTarget);
     }
     void FixedUpdate()
     {
@@ -93,9 +94,9 @@ public class RobotMovement : MonoBehaviour
     {
         meshAgent.SetDestination(destination.position);
     }
-    public void SetState(string state)
+    public void ReceiveCommand(string command)
     {
-        switch (state)
+        switch (command)
         {
             case "GO":
                 meshAgent.speed = 1;
@@ -108,6 +109,9 @@ public class RobotMovement : MonoBehaviour
             case "FOLLOW":
                 meshAgent.speed = 1;
                 currentState = States.FOLLOW;
+                break;
+            case "STATUS":
+                
                 break;
             default:
                 break;
