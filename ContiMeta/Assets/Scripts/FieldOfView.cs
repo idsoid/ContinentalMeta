@@ -9,6 +9,7 @@ public class FieldOfView : MonoBehaviour
     public float radius, angle;
     public LayerMask targetMask, obstructionMask;
     private IEnumerator coroutine;
+    public bool playerInRange, playerSpotted;
     
     void Start()
     {
@@ -39,7 +40,7 @@ public class FieldOfView : MonoBehaviour
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
         if (rangeChecks.Length > 0)
         {
-            gameManager.SetPlayerInRange(true);
+            playerInRange = true;
             Transform target = rangeChecks[0].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
 
@@ -48,13 +49,22 @@ public class FieldOfView : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    gameManager.SetPlayerSpotted(true);
+                    playerSpotted = true;
                     return;
                 }
             }
+            return;
         }
 
-        gameManager.SetPlayerInRange(false);
-        gameManager.SetPlayerSpotted(false);
+        playerInRange = false;
+        playerSpotted = false;
+    }
+    public bool GetPlayerSpotted()
+    {
+        return playerSpotted;
+    }
+    public bool GetPlayerInRange()
+    {
+        return playerInRange;
     }
 }

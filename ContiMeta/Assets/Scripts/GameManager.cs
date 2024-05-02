@@ -22,12 +22,12 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField]
-    private MeshRenderer meshRenderer;
+    private List<MeshRenderer> meshRenderers;
     [SerializeField]
-    private RobotMovement robotMovement;
+    private List<RobotManager> robotList;
     public NavMeshSurface navMeshSurface;
-    public float scanTimer = 0.0f;
-    public bool playerInRange, playerSpotted, startTimer;
+    public List<float> scanTimer;
+    public List<bool> startTimer;
     public string currentPose;
     public bool menuActive = false;
 
@@ -39,43 +39,37 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (startTimer)
+        foreach (var robot in robotList)
         {
-            scanTimer += Time.deltaTime;
-            if (scanTimer >= 1f)
+            if (robot.StartTimer)
             {
-                SendCommand(currentPose);
-                ResetScan();
+                robot.ScanTimer += Time.deltaTime;
+                if (robot.ScanTimer >= 1f)
+                {
+                    PoseCommand(currentPose);
+                    ResetScan();
+                }
             }
         }
     }
 
     public void PlayerPoseDetection(string playerPose)
     {
-        if (!playerSpotted)
+        foreach (var robot in robotList)
         {
-            return;
+            if (robot.PlayerSpotted())
+            {
+                robot.StartTimer = true;
+            }
         }
-
-        startTimer = true;
         currentPose = playerPose;
     }
     public void ResetScan()
     {
-        startTimer = false;
-        scanTimer = 0.0f;
-    }
-    public void SetPlayerSpotted(bool check)
-    {
-        playerSpotted = check;
-    }
-    public void SetPlayerInRange(bool check)
-    {
-        playerInRange = check;
-    }
-    public bool GetPlayerInRange()
-    {
-        return playerInRange;
+        foreach (var robot in robotList)
+        {
+            robot.Restart();
+        }
     }
     public void ToggleMenu()
     {
@@ -85,9 +79,40 @@ public class GameManager : MonoBehaviour
     {
         return menuActive;
     }
-    public void SendCommand(string command)
+    public void PoseCommand(string command)
     {
-        meshRenderer.material.color = command switch
+        for (int i = 0; i < robotList.Count; i++)
+        {
+            if (robotList[i].PlayerSpotted())
+            {
+                meshRenderers[i].material.color = command switch
+                {
+                    "GO" => Color.green,
+                    "STOP" => Color.red,
+                    "FOLLOW" => Color.yellow,
+                    "STATUS" => Color.blue,
+                    _ => Color.black,
+                };
+                robotList[i].SendCommand(command);
+            }
+        }
+    }
+    public void VoiceCommand(string[] command)
+    {
+        int robotID = command[0].ToUpper() switch
+        {
+            string id when id.ToUpper().Contains("ONE") => 1,
+            string id when id.ToUpper().Contains("TWO") => 2,
+            string id when id.ToUpper().Contains("THREE") => 3,
+            string id when id.ToUpper().Contains("FOUR") => 4,
+            _ => 0
+        };
+        //if (!robotList[robotID].PlayerInRange())
+        //{
+        //    return;
+        //}
+
+        meshRenderers[robotID].material.color = command[1].ToUpper() switch
         {
             "GO" => Color.green,
             "STOP" => Color.red,
@@ -95,6 +120,6 @@ public class GameManager : MonoBehaviour
             "STATUS" => Color.blue,
             _ => Color.black,
         };
-        robotMovement.ReceiveCommand(command);
+        robotList[robotID].SendCommand(command[1]);
     }
 }

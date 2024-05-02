@@ -3210,6 +3210,15 @@ MonoBehaviour:
   intent: user_command
   confidenceThreshold: 0.6
   valueMatchers:
+  - path: entities.id:id[0].value
+    witValueReference: {fileID: 0}
+    contentRequired: 1
+    matchMethod: 0
+    comparisonMethod: 0
+    matchValue: 
+    floatingPointComparisonTolerance: 0.00009999999747378752
+    allowConfidenceOverlap: 0
+    confidenceRanges: []
   - path: entities.instructions:instructions[0].value
     witValueReference: {fileID: 0}
     contentRequired: 1
@@ -18208,7 +18217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2090096808
 MonoBehaviour:
   m_ObjectHideFlags: 0
