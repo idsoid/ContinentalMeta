@@ -39,15 +39,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (var robot in robotList)
+        for (int i = 0; i < robotList.Count; i++)
         {
-            if (robot.StartTimer)
+            if (robotList[i].StartTimer)
             {
-                robot.ScanTimer += Time.deltaTime;
-                if (robot.ScanTimer >= 1f)
+                robotList[i].ScanTimer += Time.deltaTime;
+                if (robotList[i].ScanTimer >= 1f)
                 {
-                    PoseCommand(currentPose);
-                    ResetScan();
+                    PoseCommand(i, currentPose);
+                    ResetScan(i);
                 }
             }
         }
@@ -64,12 +64,9 @@ public class GameManager : MonoBehaviour
         }
         currentPose = playerPose;
     }
-    public void ResetScan()
+    public void ResetScan(int robotID)
     {
-        foreach (var robot in robotList)
-        {
-            robot.Restart();
-        }
+        robotList[robotID].Restart();
     }
     public void ToggleMenu()
     {
@@ -79,23 +76,17 @@ public class GameManager : MonoBehaviour
     {
         return menuActive;
     }
-    public void PoseCommand(string command)
+    public void PoseCommand(int robotID, string command)
     {
-        for (int i = 0; i < robotList.Count; i++)
+        meshRenderers[robotID].material.color = command switch
         {
-            if (robotList[i].PlayerSpotted())
-            {
-                meshRenderers[i].material.color = command switch
-                {
-                    "GO" => Color.green,
-                    "STOP" => Color.red,
-                    "FOLLOW" => Color.yellow,
-                    "STATUS" => Color.blue,
-                    _ => Color.black,
-                };
-                robotList[i].SendCommand(command);
-            }
-        }
+            "GO" => Color.green,
+            "STOP" => Color.red,
+            "FOLLOW" => Color.yellow,
+            "STATUS" => Color.blue,
+            _ => Color.black,
+        };
+        robotList[robotID].SendCommand(command);
     }
     public void VoiceCommand(string[] command)
     {

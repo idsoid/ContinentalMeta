@@ -99,7 +99,8 @@ public class RobotMovement : MonoBehaviour
         switch (command)
         {
             case "GO":
-                meshAgent.speed = 1;
+                meshAgent.speed = 0.5f;
+                meshAgent.stoppingDistance = 0.5f;
                 currentState = States.DELIVER;
                 break;
             case "STOP":
@@ -107,7 +108,8 @@ public class RobotMovement : MonoBehaviour
                 currentState = States.STOP;
                 break;
             case "FOLLOW":
-                meshAgent.speed = 1;
+                meshAgent.speed = 0.5f;
+                meshAgent.stoppingDistance = 2.0f;
                 currentState = States.FOLLOW;
                 break;
             case "STATUS":

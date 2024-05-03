@@ -10,6 +10,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask, obstructionMask;
     private IEnumerator coroutine;
     public bool playerInRange, playerSpotted;
+    //public Transform player;
     
     void Start()
     {
@@ -21,7 +22,7 @@ public class FieldOfView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.DrawLine(transform.position, player.position, Color.red);
     }
 
     //Field of View
