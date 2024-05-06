@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
+using Oculus.Interaction.Locomotion;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
     }
-
+    
     [SerializeField]
     private List<MeshRenderer> meshRenderers;
     [SerializeField]
@@ -112,5 +113,9 @@ public class GameManager : MonoBehaviour
             _ => Color.black,
         };
         robotList[robotID].SendCommand(command[1]);
+    }
+    public void DebugTestMessage(string text)
+    {
+        Debug.Log(this.name + ": " + text);
     }
 }

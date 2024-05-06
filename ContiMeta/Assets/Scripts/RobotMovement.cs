@@ -6,10 +6,11 @@ using UnityEngine.AI;
 public class RobotMovement : MonoBehaviour
 {
     [SerializeField]
+    private Transform player;
+    private Vector3 playerPos = Vector3.zero;
+    [SerializeField]
     private List<Transform> waypoints;
     private int currWaypoint = 0;
-    [SerializeField]
-    private Transform player;
     private enum States
     {
         DELIVER,
@@ -23,17 +24,23 @@ public class RobotMovement : MonoBehaviour
     void Start()
     {
         meshAgent = GetComponent<NavMeshAgent>();
-
+        playerPos = player.position;
         Move(waypoints[currWaypoint]);
     }
     void Update()
     {
-        Debug.Log(meshAgent.pathStatus);
+        //Debug.Log(meshAgent.pathStatus);
         Debug.Log(currentState);
-        Debug.Log(meshAgent.steeringTarget);
+        Debug.Log(playerPos);
+        //Debug.Log(meshAgent.steeringTarget);
+        if (Vector3.Distance(playerPos, player.position) >= 4f)
+        {
+            playerPos = player.position;
+        }
     }
     void FixedUpdate()
     {
+        //Update player saved position when changed
         FSM();
     }
 
@@ -83,7 +90,7 @@ public class RobotMovement : MonoBehaviour
                 }
                 else
                 {
-                    Move(player);
+                    Move(playerPos);
                 }
                 break;
             default:
@@ -93,6 +100,10 @@ public class RobotMovement : MonoBehaviour
     private void Move(Transform destination)
     {
         meshAgent.SetDestination(destination.position);
+    }
+    private void Move(Vector3 position)
+    {
+        meshAgent.SetDestination(position);
     }
     public void ReceiveCommand(string command)
     {
