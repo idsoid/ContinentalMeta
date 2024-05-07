@@ -19,6 +19,7 @@ public class RobotMovement : MonoBehaviour
         DELIVER,
         PICKUP,
         PUTDOWN,
+        BACKUP,
         STOP,
         FOLLOW,
         STUCK,
@@ -51,7 +52,7 @@ public class RobotMovement : MonoBehaviour
             case States.DELIVER:
                 if (rackOn)
                 {
-                    Move(deliverypoints[0]);
+                    Move(deliverypoints[1]);
                 }
                 else
                 {
@@ -94,6 +95,7 @@ public class RobotMovement : MonoBehaviour
                         rackOn = true;
                         rack.SetParent(transform);
                         currentState = States.DELIVER;
+                        Move(deliverypoints[1]);
                     }
                 }
                 break;
@@ -106,9 +108,14 @@ public class RobotMovement : MonoBehaviour
                     {
                         rackOn = false;
                         rack.SetParent(null);
-                        currentState = States.DELIVER;
+                        currentState = States.BACKUP;
+                        meshAgent.updateRotation = false;
+                        Move(deliverypoints[1]);
                     }
                 }
+                break;
+            case States.BACKUP:
+
                 break;
             case States.STOP:
                 Debug.Log("stopped");
@@ -165,10 +172,4 @@ public class RobotMovement : MonoBehaviour
                 break;
         }
     }
-
-
-    //for pickup and carry
-    //stopping distance = 0
-    //turn nav mesh obstacle off
-    //when switching from carry to pickup, immediately use Move(rack) to change agent destination
 }
