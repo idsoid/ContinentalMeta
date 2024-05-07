@@ -6,37 +6,37 @@ using UnityEngine.AI;
 public class RobotMovement : MonoBehaviour
 {
     [SerializeField]
-    private Transform player;
-    private Vector3 playerPos = Vector3.zero;
+    private Transform rack, deliveryArea;
     [SerializeField]
-    private List<Transform> waypoints;
-    private int currWaypoint = 0;
+    private List<Transform> rackPoints, deliverypoints; 
+    [SerializeField]
+    private Transform player;
+    //private List<Transform> waypoints;
+    //private int currWaypoint = 0;
+    private bool rackOn = false;
     private enum States
     {
         DELIVER,
+        PICKUP,
+        PUTDOWN,
         STOP,
+        FOLLOW,
         STUCK,
-        FOLLOW
     }
     private States currentState = States.DELIVER;
     private NavMeshAgent meshAgent;
+    [SerializeField]
+    private Animator animator;
 
     void Start()
     {
         meshAgent = GetComponent<NavMeshAgent>();
-        playerPos = player.position;
-        Move(waypoints[currWaypoint]);
+        meshAgent.stoppingDistance = 0;
     }
     void Update()
     {
         //Debug.Log(meshAgent.pathStatus);
         Debug.Log(currentState);
-        Debug.Log(playerPos);
-        //Debug.Log(meshAgent.steeringTarget);
-        if (Vector3.Distance(playerPos, player.position) >= 4f)
-        {
-            playerPos = player.position;
-        }
     }
     void FixedUpdate()
     {
@@ -49,6 +49,15 @@ public class RobotMovement : MonoBehaviour
         switch (currentState)
         {
             case States.DELIVER:
+                if (rackOn)
+                {
+                    Move(deliverypoints[0]);
+                }
+                else
+                {
+                    Move(rackPoints[0]);
+                }
+
                 //Check if near/at destination
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
@@ -61,25 +70,48 @@ public class RobotMovement : MonoBehaviour
                     //Continue path
                     else
                     {
-                        currWaypoint++;
-                        if (currWaypoint == waypoints.Count)
+                        if (rackOn)
                         {
-                            currWaypoint = 0;
+                            currentState = States.PUTDOWN;
+                            Move(deliveryArea);
+                        }
+                        else
+                        {
+                            rack.GetComponent<NavMeshObstacle>().enabled = false;
+                            currentState = States.PICKUP;
+                            Move(rack);
                         }
                     }
                 }
-                Move(waypoints[currWaypoint]);
+                break;
+            case States.PICKUP:
+                Move(rack);
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                {
+                    animator.SetInteger("LiftPhase", 1);
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleUp"))
+                    {
+                        rackOn = true;
+                        rack.SetParent(transform);
+                        currentState = States.DELIVER;
+                    }
+                }
+                break;
+            case States.PUTDOWN:
+                Move(deliveryArea);
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                {
+                    animator.SetInteger("LiftPhase", 0);
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
+                    {
+                        rackOn = false;
+                        rack.SetParent(null);
+                        currentState = States.DELIVER;
+                    }
+                }
                 break;
             case States.STOP:
                 Debug.Log("stopped");
-                break;
-            case States.STUCK:
-                //Check if path is free
-                if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
-                {
-                    currentState = States.DELIVER;
-                    meshAgent.speed = 2;
-                }
                 break;
             case States.FOLLOW:
                 //Path blocked
@@ -88,9 +120,17 @@ public class RobotMovement : MonoBehaviour
                     currentState = States.STUCK;
                     meshAgent.speed = 0;
                 }
-                else
+                else if (Vector3.Distance(transform.position, player.position) >= 4f)
                 {
-                    Move(playerPos);
+                    Move(player);
+                }
+                break;
+            case States.STUCK:
+                //Check if path is free
+                if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    currentState = States.DELIVER;
+                    meshAgent.speed = 2;
                 }
                 break;
             default:
@@ -101,17 +141,12 @@ public class RobotMovement : MonoBehaviour
     {
         meshAgent.SetDestination(destination.position);
     }
-    private void Move(Vector3 position)
-    {
-        meshAgent.SetDestination(position);
-    }
     public void ReceiveCommand(string command)
     {
         switch (command)
         {
             case "GO":
                 meshAgent.speed = 0.5f;
-                meshAgent.stoppingDistance = 0.5f;
                 currentState = States.DELIVER;
                 break;
             case "STOP":
@@ -130,4 +165,10 @@ public class RobotMovement : MonoBehaviour
                 break;
         }
     }
+
+
+    //for pickup and carry
+    //stopping distance = 0
+    //turn nav mesh obstacle off
+    //when switching from carry to pickup, immediately use Move(rack) to change agent destination
 }
