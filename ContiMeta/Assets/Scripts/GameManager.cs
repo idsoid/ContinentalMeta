@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Player Stuff
     public void PlayerPoseDetection(string playerPose)
     {
         foreach (var robot in robotList)
@@ -117,5 +118,11 @@ public class GameManager : MonoBehaviour
     public void DebugTestMessage(string text)
     {
         Debug.Log(this.name + ": " + text);
+    }
+
+    //Object Stuff
+    public void SpawnRack()
+    {
+
     }
 }

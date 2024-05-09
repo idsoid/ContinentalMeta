@@ -115,6 +115,7 @@ public class RobotMovement : MonoBehaviour
                 }
                 break;
             case States.BACKUP:
+                Move(deliverypoints[1]);
 
                 break;
             case States.STOP:
