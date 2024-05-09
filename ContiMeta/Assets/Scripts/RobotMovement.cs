@@ -6,9 +6,12 @@ using UnityEngine.AI;
 public class RobotMovement : MonoBehaviour
 {
     [SerializeField]
-    private Transform rack, deliveryArea;
+    private Transform rackArea, deliveryArea;
     [SerializeField]
-    private List<Transform> rackPoints, deliverypoints; 
+    private List<Transform> rackPoints, deliverypoints;
+    [SerializeField]
+    private GameObject rackAreaObj, deliveryAreaObj, rackPrefab;
+    private GameObject rackObj;
     [SerializeField]
     private Transform player;
     //private List<Transform> waypoints;
@@ -78,22 +81,24 @@ public class RobotMovement : MonoBehaviour
                         }
                         else
                         {
-                            rack.GetComponent<NavMeshObstacle>().enabled = false;
+                            rackArea.GetComponent<NavMeshObstacle>().enabled = false;
                             currentState = States.PICKUP;
-                            Move(rack);
+                            Move(rackArea);
                         }
                     }
                 }
                 break;
             case States.PICKUP:
-                Move(rack);
+                Move(rackArea);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     animator.SetInteger("LiftPhase", 1);
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleUp"))
                     {
                         rackOn = true;
-                        rack.SetParent(transform);
+                        rackObj = Instantiate(rackPrefab, rackArea);
+                        rackObj.transform.SetParent(transform);
+                        StartCoroutine(EnableRack());
                         currentState = States.DELIVER;
                         Move(deliverypoints[1]);
                     }
@@ -107,7 +112,9 @@ public class RobotMovement : MonoBehaviour
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
                     {
                         rackOn = false;
-                        rack.SetParent(null);
+                        Destroy(rackObj);
+                        StartCoroutine(DisableDelivery());
+                        deliveryAreaObj.SetActive(true);
                         currentState = States.BACKUP;
                         meshAgent.updateRotation = false;
                         Move(deliverypoints[1]);
@@ -116,7 +123,12 @@ public class RobotMovement : MonoBehaviour
                 break;
             case States.BACKUP:
                 Move(deliverypoints[1]);
-
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                {
+                    currentState = States.DELIVER;
+                    meshAgent.updateRotation = true;
+                    Move(rackPoints[0]);
+                }
                 break;
             case States.STOP:
                 Debug.Log("stopped");
@@ -172,5 +184,17 @@ public class RobotMovement : MonoBehaviour
             default:
                 break;
         }
+    }
+    private IEnumerator DisableDelivery()
+    {
+        deliveryAreaObj.SetActive(true);
+        yield return new WaitForSecondsRealtime(15f);
+        deliveryAreaObj.SetActive(false);
+    }
+    private IEnumerator EnableRack()
+    {
+        rackAreaObj.SetActive(false);
+        yield return new WaitForSecondsRealtime(15f);
+        rackAreaObj.SetActive(true);
     }
 }

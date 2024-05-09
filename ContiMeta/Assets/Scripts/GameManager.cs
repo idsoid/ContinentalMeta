@@ -119,10 +119,4 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log(this.name + ": " + text);
     }
-
-    //Object Stuff
-    public void SpawnRack()
-    {
-
-    }
 }
