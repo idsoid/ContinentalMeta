@@ -100,10 +100,10 @@ public class GameManager : MonoBehaviour
             string id when id.ToUpper().Contains("FOUR") => 4,
             _ => 0
         };
-        //if (!robotList[robotID].PlayerInRange())
-        //{
-        //    return;
-        //}
+        if (!robotList[robotID].PlayerInRange())
+        {
+            return;
+        }
 
         meshRenderers[robotID].material.color = command[1].ToUpper() switch
         {
