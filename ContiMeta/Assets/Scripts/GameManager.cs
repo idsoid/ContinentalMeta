@@ -115,6 +115,10 @@ public class GameManager : MonoBehaviour
         };
         robotList[robotID].SendCommand(command[1]);
     }
+    public void MenuCommand (int robotID, string command)
+    {
+
+    }
     public void DebugTestMessage(string text)
     {
         Debug.Log(this.name + ": " + text);

@@ -112,6 +112,7 @@ public class RobotMovement : MonoBehaviour
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
                     {
                         rackOn = false;
+                        deliveryAreaObj.transform.rotation = rackObj.transform.rotation;
                         Destroy(rackObj);
                         StartCoroutine(DisableDelivery());
                         deliveryAreaObj.SetActive(true);
@@ -167,10 +168,12 @@ public class RobotMovement : MonoBehaviour
         {
             case "GO":
                 meshAgent.speed = 0.5f;
+                meshAgent.stoppingDistance = 0;
                 currentState = States.DELIVER;
                 break;
             case "STOP":
                 meshAgent.speed = 0;
+                meshAgent.stoppingDistance = 0;
                 currentState = States.STOP;
                 break;
             case "FOLLOW":
