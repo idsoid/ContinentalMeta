@@ -21,7 +21,9 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
     }
-    
+
+    [SerializeField]
+    private NavMeshObstacle playerNavObstacle;
     [SerializeField]
     private List<MeshRenderer> meshRenderers;
     [SerializeField]
@@ -115,9 +117,13 @@ public class GameManager : MonoBehaviour
         };
         robotList[robotID].SendCommand(command[1]);
     }
-    public void MenuCommand (int robotID, string command)
+    public void MenuCommand (string command)
     {
 
+    }
+    public NavMeshObstacle PlayerNavObstacle()
+    {
+        return playerNavObstacle;
     }
     public void DebugTestMessage(string text)
     {

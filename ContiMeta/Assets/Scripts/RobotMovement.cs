@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class RobotMovement : MonoBehaviour
 {
+    private GameManager gameManager;
     [SerializeField]
     private Transform rackArea, deliveryArea;
     [SerializeField]
@@ -34,6 +35,7 @@ public class RobotMovement : MonoBehaviour
 
     void Start()
     {
+        gameManager = GameManager.Instance;
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.stoppingDistance = 0;
     }
@@ -141,7 +143,7 @@ public class RobotMovement : MonoBehaviour
                     currentState = States.STUCK;
                     meshAgent.speed = 0;
                 }
-                else if (Vector3.Distance(transform.position, player.position) >= 4f)
+                else
                 {
                     Move(player);
                 }
@@ -167,6 +169,7 @@ public class RobotMovement : MonoBehaviour
         switch (command)
         {
             case "GO":
+                gameManager.PlayerNavObstacle().enabled = true;
                 meshAgent.speed = 0.5f;
                 meshAgent.stoppingDistance = 0;
                 currentState = States.DELIVER;
@@ -177,6 +180,7 @@ public class RobotMovement : MonoBehaviour
                 currentState = States.STOP;
                 break;
             case "FOLLOW":
+                gameManager.PlayerNavObstacle().enabled = false;
                 meshAgent.speed = 0.5f;
                 meshAgent.stoppingDistance = 2.0f;
                 currentState = States.FOLLOW;
