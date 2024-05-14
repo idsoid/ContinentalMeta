@@ -17,6 +17,10 @@ public class RobotManager : MonoBehaviour
     {
         robotMovement.ReceiveCommand(command);
     }
+    public void SendPackage(GameObject package)
+    {
+        robotMovement.ReceivePackage(package);
+    }
     public bool PlayerSpotted()
     {
         return robotView.GetPlayerSpotted();

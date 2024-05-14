@@ -15,9 +15,9 @@ public class RobotMovement : MonoBehaviour
     private GameObject rackObj;
     [SerializeField]
     private Transform player;
-    //private List<Transform> waypoints;
-    //private int currWaypoint = 0;
     private bool rackOn = false;
+
+    private GameObject customPackage;
     private enum States
     {
         DELIVER,
@@ -26,6 +26,8 @@ public class RobotMovement : MonoBehaviour
         BACKUP,
         STOP,
         FOLLOW,
+        MANUALPICKUP,
+        MANUALPUTDOWN,
         STUCK,
     }
     private States currentState = States.DELIVER;
@@ -185,12 +187,26 @@ public class RobotMovement : MonoBehaviour
                 meshAgent.stoppingDistance = 2.0f;
                 currentState = States.FOLLOW;
                 break;
+            case "MANUALPICKUP":
+
+                currentState = States.MANUALPICKUP;
+                break;
+            case "MANUALPUTDOWN":
+
+                currentState = States.MANUALPUTDOWN;
+                break;
             case "STATUS":
                 
                 break;
             default:
                 break;
         }
+    }
+    public void ReceivePackage(GameObject package)
+    {
+        customPackage = package;
+        Debug.Log(package.name);
+        //package.transform.position += Vector3.forward;
     }
     private IEnumerator DisableDelivery()
     {

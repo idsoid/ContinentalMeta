@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private NavMeshObstacle playerNavObstacle;
     [SerializeField]
+    private Transform playerRightHand, playerLeftHand;
+    private int closestPackage;
+    [SerializeField]
     private List<MeshRenderer> meshRenderers;
     [SerializeField]
     private List<RobotManager> robotList;
@@ -37,7 +40,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
     // Update is called once per frame
     void Update()
@@ -53,6 +56,26 @@ public class GameManager : MonoBehaviour
                     ResetScan(i);
                 }
             }
+        }
+
+        Collider[] packages = Physics.OverlapSphere(playerRightHand.position, 3.0f, 1 << 9);
+        for (int i = 0; i < packages.Length; i++)
+        {
+            if (i == 0)
+            {
+                closestPackage = 0;
+            }
+            else
+            {
+                if (Vector3.Distance(packages[i].transform.position, playerRightHand.position) < Vector3.Distance(packages[closestPackage].transform.position, playerRightHand.position))
+                {
+                    closestPackage = i;
+                }
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            robotList[0].SendPackage(packages[closestPackage].gameObject);
         }
     }
 
@@ -72,6 +95,16 @@ public class GameManager : MonoBehaviour
     {
         robotList[robotID].Restart();
     }
+    public void PoseResetScan()
+    {
+        foreach (var robot in robotList)
+        {
+            if (robot.PlayerSpotted())
+            {
+                robot.Restart();
+            }
+        }
+    }
     public void ToggleMenu()
     {
         menuActive = !menuActive;
@@ -90,7 +123,43 @@ public class GameManager : MonoBehaviour
             "STATUS" => Color.blue,
             _ => Color.black,
         };
-        robotList[robotID].SendCommand(command);
+        switch (command)
+        {
+            case "RIGHTPICKUP":
+                Collider[] packages = Physics.OverlapSphere(playerRightHand.position, 3.0f, 1 << 9);
+                for (int i = 0; i < packages.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        closestPackage = 0;
+                    }
+                    else
+                    {
+                        if (Vector3.Distance(packages[i].transform.position, playerRightHand.position) < Vector3.Distance(packages[closestPackage].transform.position, playerRightHand.position))
+                        {
+                            closestPackage = i;
+                        }
+                    }
+                }
+                robotList[robotID].SendPackage(packages[closestPackage].gameObject);
+                robotList[robotID].SendCommand("MANUALPICKUP");
+                break;
+            case "LEFTPICKUP":
+
+                robotList[robotID].SendCommand("MANUALPICKUP");
+                break;
+            case "RIGHTPUTDOWN":
+
+                robotList[robotID].SendCommand("MANUALPUTDOWN");
+                break;
+            case "LEFTPUTDOWN":
+
+                robotList[robotID].SendCommand("MANUALPUTDOWN");
+                break;
+            default:
+                robotList[robotID].SendCommand(command);
+                break;
+        }
     }
     public void VoiceCommand(string[] command)
     {
@@ -119,7 +188,13 @@ public class GameManager : MonoBehaviour
     }
     public void MenuCommand (string command)
     {
-
+        foreach (var robot in robotList)
+        {
+            if (robot.PlayerSpotted())
+            {
+                robot.SendCommand(command);
+            }
+        }
     }
     public NavMeshObstacle PlayerNavObstacle()
     {
