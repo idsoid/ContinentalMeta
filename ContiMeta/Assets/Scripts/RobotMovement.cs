@@ -13,11 +13,14 @@ public class RobotMovement : MonoBehaviour
     [SerializeField]
     private GameObject rackAreaObj, deliveryAreaObj, rackPrefab;
     private GameObject rackObj;
+    private int rackNearestPoint = 0;
+    private Transform goToPoint;
     [SerializeField]
     private Transform player;
     private bool rackOn = false;
 
     private GameObject customPackage;
+    private GameObject customDeliveryArea;
     private enum States
     {
         DELIVER,
@@ -26,6 +29,7 @@ public class RobotMovement : MonoBehaviour
         BACKUP,
         STOP,
         FOLLOW,
+        MANUALGOTO,
         MANUALPICKUP,
         MANUALPUTDOWN,
         STUCK,
@@ -150,6 +154,52 @@ public class RobotMovement : MonoBehaviour
                     Move(player);
                 }
                 break;
+            case States.MANUALGOTO:
+                Move(goToPoint);
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                {
+                    if (rackOn)
+                    {
+                        currentState = States.MANUALPUTDOWN;
+                    }
+                    else
+                    {
+                        customPackage.GetComponent<NavMeshObstacle>().enabled = false;
+                        currentState = States.MANUALPICKUP;
+                        Move(customPackage.transform);
+                    }
+                }
+                break; 
+            case States.MANUALPICKUP:
+                Move(customPackage.transform);
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                {
+                    animator.SetInteger("LiftPhase", 1);
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleUp"))
+                    {
+                        rackOn = true;
+                        customPackage.transform.SetParent(transform);
+                        currentState = States.FOLLOW;
+                        Move(player);
+                    }
+                }
+                break;
+            case States.MANUALPUTDOWN:
+                Move(customDeliveryArea.transform);
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                {
+                    animator.SetInteger("LiftPhase", 0);
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
+                    {
+                        rackOn = false;
+                        customPackage.transform.SetParent(null);
+                        Destroy(customPackage, 15f);
+                        customPackage = null;
+                        currentState = States.FOLLOW;
+                        Move(player);
+                    }
+                }
+                break;
             case States.STUCK:
                 //Check if path is free
                 if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
@@ -188,12 +238,18 @@ public class RobotMovement : MonoBehaviour
                 currentState = States.FOLLOW;
                 break;
             case "MANUALPICKUP":
-
-                currentState = States.MANUALPICKUP;
+                gameManager.PlayerNavObstacle().enabled = true;
+                meshAgent.speed = 0.5f;
+                meshAgent.stoppingDistance = 0;
+                NearestPoint(customPackage);
+                currentState = States.MANUALGOTO;
                 break;
             case "MANUALPUTDOWN":
-
-                currentState = States.MANUALPUTDOWN;
+                gameManager.PlayerNavObstacle().enabled = true;
+                meshAgent.speed = 0.5f;
+                meshAgent.stoppingDistance = 0;
+                NearestPoint(customDeliveryArea);
+                currentState = States.MANUALGOTO;
                 break;
             case "STATUS":
                 
@@ -206,7 +262,11 @@ public class RobotMovement : MonoBehaviour
     {
         customPackage = package;
         Debug.Log(package.name);
-        //package.transform.position += Vector3.forward;
+    }
+    public void ReceiveDeliveryArea(GameObject deliveryArea)
+    {
+        customDeliveryArea = deliveryArea;
+        Debug.Log(deliveryArea.name);
     }
     private IEnumerator DisableDelivery()
     {
@@ -219,5 +279,23 @@ public class RobotMovement : MonoBehaviour
         rackAreaObj.SetActive(false);
         yield return new WaitForSecondsRealtime(15f);
         rackAreaObj.SetActive(true);
+    }
+    private void NearestPoint(GameObject mainItem)
+    {
+        for (int i = 0; i < mainItem.transform.childCount; i++)
+        {
+            if (i == 0)
+            {
+                rackNearestPoint = 0;
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, mainItem.transform.GetChild(i).position) < Vector3.Distance(transform.position, mainItem.transform.GetChild(rackNearestPoint).position))
+                {
+                    rackNearestPoint = i;
+                }
+            }
+        }
+        goToPoint = mainItem.transform.GetChild(rackNearestPoint);
     }
 }

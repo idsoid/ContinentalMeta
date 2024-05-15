@@ -21,6 +21,10 @@ public class RobotManager : MonoBehaviour
     {
         robotMovement.ReceivePackage(package);
     }
+    public void SendDeliveryArea(GameObject deliveryArea)
+    {
+        robotMovement.ReceiveDeliveryArea(deliveryArea);
+    }
     public bool PlayerSpotted()
     {
         return robotView.GetPlayerSpotted();

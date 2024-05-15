@@ -58,24 +58,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Collider[] packages = Physics.OverlapSphere(playerRightHand.position, 3.0f, 1 << 9);
-        for (int i = 0; i < packages.Length; i++)
-        {
-            if (i == 0)
-            {
-                closestPackage = 0;
-            }
-            else
-            {
-                if (Vector3.Distance(packages[i].transform.position, playerRightHand.position) < Vector3.Distance(packages[closestPackage].transform.position, playerRightHand.position))
-                {
-                    closestPackage = i;
-                }
-            }
-        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            robotList[0].SendPackage(packages[closestPackage].gameObject);
+            PoseCommand(0, "RIGHTPICKUP");
         }
     }
 
@@ -126,34 +111,19 @@ public class GameManager : MonoBehaviour
         switch (command)
         {
             case "RIGHTPICKUP":
-                Collider[] packages = Physics.OverlapSphere(playerRightHand.position, 3.0f, 1 << 9);
-                for (int i = 0; i < packages.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        closestPackage = 0;
-                    }
-                    else
-                    {
-                        if (Vector3.Distance(packages[i].transform.position, playerRightHand.position) < Vector3.Distance(packages[closestPackage].transform.position, playerRightHand.position))
-                        {
-                            closestPackage = i;
-                        }
-                    }
-                }
-                robotList[robotID].SendPackage(packages[closestPackage].gameObject);
+                PackageCheck(playerRightHand, robotID);
                 robotList[robotID].SendCommand("MANUALPICKUP");
                 break;
             case "LEFTPICKUP":
-
+                PackageCheck(playerLeftHand, robotID);
                 robotList[robotID].SendCommand("MANUALPICKUP");
                 break;
             case "RIGHTPUTDOWN":
-
+                PackageCheck(playerRightHand, robotID);
                 robotList[robotID].SendCommand("MANUALPUTDOWN");
                 break;
             case "LEFTPUTDOWN":
-
+                PackageCheck(playerLeftHand, robotID);
                 robotList[robotID].SendCommand("MANUALPUTDOWN");
                 break;
             default:
@@ -199,6 +169,25 @@ public class GameManager : MonoBehaviour
     public NavMeshObstacle PlayerNavObstacle()
     {
         return playerNavObstacle;
+    }
+    public void PackageCheck(Transform hand, int robotID)
+    {
+        Collider[] packages = Physics.OverlapSphere(hand.position, 3.0f, 1 << 9);
+        for (int i = 0; i < packages.Length; i++)
+        {
+            if (i == 0)
+            {
+                closestPackage = 0;
+            }
+            else
+            {
+                if (Vector3.Distance(packages[i].transform.position, hand.position) < Vector3.Distance(packages[closestPackage].transform.position, hand.position))
+                {
+                    closestPackage = i;
+                }
+            }
+        }
+        robotList[robotID].SendPackage(packages[closestPackage].gameObject);
     }
     public void DebugTestMessage(string text)
     {
