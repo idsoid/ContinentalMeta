@@ -17,11 +17,11 @@ public class RobotManager : MonoBehaviour
     {
         robotMovement.ReceiveCommand(command);
     }
-    public void SendPackage(GameObject package)
+    public void SendPackage(Transform package)
     {
         robotMovement.ReceivePackage(package);
     }
-    public void SendDeliveryArea(GameObject deliveryArea)
+    public void SendDeliveryArea(Transform deliveryArea)
     {
         robotMovement.ReceiveDeliveryArea(deliveryArea);
     }

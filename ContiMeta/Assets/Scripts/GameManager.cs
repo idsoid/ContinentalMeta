@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Transform playerRightHand, playerLeftHand;
     private int closestPackage;
+    private int closestDeliveryArea;
     [SerializeField]
     private List<MeshRenderer> meshRenderers;
     [SerializeField]
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     public List<bool> startTimer;
     public string currentPose;
     public bool menuActive = false;
+    public bool rackOn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -60,7 +62,15 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            PoseCommand(0, "RIGHTPICKUP");
+            if (!rackOn)
+            {
+                PoseCommand(0, "RIGHTPICKUP");
+            }
+            else
+            {
+                PoseCommand(0, "RIGHTPUTDOWN");
+            }
+            rackOn = !rackOn;
         }
     }
 
@@ -119,12 +129,12 @@ public class GameManager : MonoBehaviour
                 robotList[robotID].SendCommand("MANUALPICKUP");
                 break;
             case "RIGHTPUTDOWN":
-                PackageCheck(playerRightHand, robotID);
+                AreaCheck(playerRightHand, robotID);
                 robotList[robotID].SendCommand("MANUALPUTDOWN");
                 break;
             case "LEFTPUTDOWN":
-                PackageCheck(playerLeftHand, robotID);
-                robotList[robotID].SendCommand("MANUALPUTDOWN");
+                AreaCheck(playerLeftHand, robotID);
+                robotList[robotID].SendCommand("MANUALPUTDOWN"); 
                 break;
             default:
                 robotList[robotID].SendCommand(command);
@@ -187,7 +197,26 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        robotList[robotID].SendPackage(packages[closestPackage].gameObject);
+        robotList[robotID].SendPackage(packages[closestPackage].transform);
+    }
+    public void AreaCheck(Transform hand, int robotID)
+    {
+        Collider[] packages = Physics.OverlapSphere(hand.position, 3.0f, 1 << 10);
+        for (int i = 0; i < packages.Length; i++)
+        {
+            if (i == 0)
+            {
+                closestDeliveryArea = 0;
+            }
+            else
+            {
+                if (Vector3.Distance(packages[i].transform.position, hand.position) < Vector3.Distance(packages[closestDeliveryArea].transform.position, hand.position))
+                {
+                    closestDeliveryArea = i;
+                }
+            }
+        }
+        robotList[robotID].SendDeliveryArea(packages[closestDeliveryArea].transform);
     }
     public void DebugTestMessage(string text)
     {
