@@ -3,7 +3,82 @@ guid: 9404ae2f91d94dd4c9cee5fb320ada70
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Black_Metal
+    second: {fileID: 2100000, guid: 25fc6a41868b2ee45ae3dc28c660edc9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chair
+    second: {fileID: 2100000, guid: 9f49d72fa742dfd41a7966fa348fe1e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DeskLamp
+    second: {fileID: 2100000, guid: 2ce4d823c3dd8c74baad3394001c9b2b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FireExtinguishier
+    second: {fileID: 2100000, guid: fac29d13060a9b74b94967e1ba53b3c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor
+    second: {fileID: 2100000, guid: 7bc3d9a18f5e97542810ab6e89f88b66, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Laptop_Monitor_Keyboard
+    second: {fileID: 2100000, guid: 699ff4ae46192a640889d6804c4bfaca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaserCutter
+    second: {fileID: 2100000, guid: 7af4b7aeb2f3e1e4581b2b438389be0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 450c319f7ea72d54b99037c3695657ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 528c02b2c5b50ea4f86f93b7ea600677, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Orange_Metal
+    second: {fileID: 2100000, guid: 107f11aca4a1e814a95aa0a867729920, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PortableTable
+    second: {fileID: 2100000, guid: 7558d811282e9014bb2f69c0956f9f18, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Table_Board_Charger
+    second: {fileID: 2100000, guid: cd62506ffe4fb10478316c346be07b36, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Test.001
+    second: {fileID: 2100000, guid: 86e5be71dd5009b42993b02a34e8b8bc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Trolley
+    second: {fileID: 2100000, guid: c42c4db617d73dc478031ddc8e8682ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wall
+    second: {fileID: 2100000, guid: 167eec2cee212c44aa6ae2da29e3c4a4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
