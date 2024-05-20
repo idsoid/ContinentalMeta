@@ -180,6 +180,7 @@ public class RobotMovement : MonoBehaviour
                         rackOn = true;
                         customPackage.SetParent(transform);
                         currentState = States.FOLLOW;
+                        gameManager.PlayerNavObstacle().enabled = false;
                         Move(player);
                     }
                 }
@@ -207,6 +208,7 @@ public class RobotMovement : MonoBehaviour
                 {
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
+                    gameManager.PlayerNavObstacle().enabled = false;
                     Move(player);
                 }
                 break;
@@ -231,9 +233,7 @@ public class RobotMovement : MonoBehaviour
         switch (command)
         {
             case "GO":
-                gameManager.PlayerNavObstacle().enabled = true;
-                meshAgent.speed = 0.5f;
-                meshAgent.stoppingDistance = 0;
+                DefaultAgentSettings();
                 currentState = States.DELIVER;
                 break;
             case "STOP":
@@ -248,16 +248,12 @@ public class RobotMovement : MonoBehaviour
                 currentState = States.FOLLOW;
                 break;
             case "MANUALPICKUP":
-                gameManager.PlayerNavObstacle().enabled = true;
-                meshAgent.speed = 0.5f;
-                meshAgent.stoppingDistance = 0;
+                DefaultAgentSettings();
                 NearestPoint(customPackage);
                 currentState = States.MANUALGOTO;
                 break;
             case "MANUALPUTDOWN":
-                gameManager.PlayerNavObstacle().enabled = true;
-                meshAgent.speed = 0.5f;
-                meshAgent.stoppingDistance = 0;
+                DefaultAgentSettings();
                 NearestPoint(customDeliveryArea);
                 currentState = States.MANUALGOTO;
                 break;
@@ -267,6 +263,12 @@ public class RobotMovement : MonoBehaviour
             default:
                 break;
         }
+    }
+    private void DefaultAgentSettings()
+    {
+        gameManager.PlayerNavObstacle().enabled = true;
+        meshAgent.speed = 0.5f;
+        meshAgent.stoppingDistance = 0;
     }
     public void ReceivePackage(Transform package)
     {
