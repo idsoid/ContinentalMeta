@@ -34,7 +34,7 @@ public class RobotMovement : MonoBehaviour
         MANUALBACKUP,
         STUCK,
     }
-    private States currentState = States.DELIVER;
+    private States currentState;
     private NavMeshAgent meshAgent;
     [SerializeField]
     private Animator animator;
@@ -44,6 +44,7 @@ public class RobotMovement : MonoBehaviour
         gameManager = GameManager.Instance;
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.stoppingDistance = 0;
+        currentState = States.DELIVER;
     }
     void Update()
     {
