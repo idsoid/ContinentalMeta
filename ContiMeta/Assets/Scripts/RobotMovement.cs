@@ -9,7 +9,7 @@ public class RobotMovement : MonoBehaviour
     [SerializeField]
     private Transform rackArea, deliveryArea;
     [SerializeField]
-    private List<Transform> rackPoints, deliverypoints;
+    private Transform rackPoint, deliverypoint;
     [SerializeField]
     private GameObject rackAreaObj, deliveryAreaObj, rackPrefab;
     private GameObject rackObj;
@@ -64,11 +64,11 @@ public class RobotMovement : MonoBehaviour
             case States.DELIVER:
                 if (rackOn)
                 {
-                    Move(deliverypoints[1]);
+                    Move(deliverypoint);
                 }
                 else
                 {
-                    Move(rackPoints[0]);
+                    Move(rackPoint);
                 }
 
                 //Check if near/at destination
@@ -109,7 +109,7 @@ public class RobotMovement : MonoBehaviour
                         rackObj.transform.SetParent(transform);
                         StartCoroutine(EnableRack());
                         currentState = States.DELIVER;
-                        Move(deliverypoints[1]);
+                        Move(deliverypoint);
                     }
                 }
                 break;
@@ -127,17 +127,17 @@ public class RobotMovement : MonoBehaviour
                         deliveryAreaObj.SetActive(true);
                         currentState = States.BACKUP;
                         meshAgent.updateRotation = false;
-                        Move(deliverypoints[1]);
+                        Move(deliverypoint);
                     }
                 }
                 break;
             case States.BACKUP:
-                Move(deliverypoints[1]);
+                Move(deliverypoint);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     currentState = States.DELIVER;
                     meshAgent.updateRotation = true;
-                    Move(rackPoints[0]);
+                    Move(rackPoint);
                 }
                 break;
             case States.STOP:
