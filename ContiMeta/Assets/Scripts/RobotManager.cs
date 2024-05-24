@@ -5,7 +5,7 @@ using UnityEngine;
 public class RobotManager : MonoBehaviour
 {
     [SerializeField]
-    private RobotMovement robotMovement;
+    private RobotController robotController;
     [SerializeField]
     private FieldOfView robotView;
     public float scanTimer = 0.0f;
@@ -15,15 +15,15 @@ public class RobotManager : MonoBehaviour
 
     public void SendCommand(string command)
     {
-        robotMovement.ReceiveCommand(command);
+        robotController.ReceiveCommand(command);
     }
     public void SendPackage(Transform package)
     {
-        robotMovement.ReceivePackage(package);
+        robotController.ReceivePackage(package);
     }
     public void SendDeliveryArea(Transform deliveryArea)
     {
-        robotMovement.ReceiveDeliveryArea(deliveryArea);
+        robotController.ReceiveDeliveryArea(deliveryArea);
     }
     public bool PlayerSpotted()
     {

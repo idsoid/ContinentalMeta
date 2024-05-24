@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
-public class RobotMovement : MonoBehaviour
+public class RobotController : MonoBehaviour
 {
     private GameManager gameManager;
     [SerializeField]
@@ -18,7 +19,6 @@ public class RobotMovement : MonoBehaviour
     [SerializeField]
     private Transform player;
     private bool rackOn = false;
-
     private Transform customPackage, customDeliveryArea;
     private enum States
     {
@@ -35,9 +35,14 @@ public class RobotMovement : MonoBehaviour
         STUCK,
     }
     private States currentState;
+    private States previousState;
     private NavMeshAgent meshAgent;
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    private GameObject statusCanvas;
+    [SerializeField]
+    private TMP_Text statusText;
 
     void Start()
     {
@@ -45,6 +50,7 @@ public class RobotMovement : MonoBehaviour
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.stoppingDistance = 0;
         currentState = States.DELIVER;
+        statusCanvas.SetActive(false);
     }
     void Update()
     {
@@ -77,6 +83,7 @@ public class RobotMovement : MonoBehaviour
                     //Path blocked
                     if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial)
                     {
+                        previousState = currentState;
                         currentState = States.STUCK;
                         meshAgent.speed = 0;
                     }
@@ -141,12 +148,12 @@ public class RobotMovement : MonoBehaviour
                 }
                 break;
             case States.STOP:
-                Debug.Log("stopped");
                 break;
             case States.FOLLOW:
                 //Path blocked
                 if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial)
                 {
+                    previousState = currentState;
                     currentState = States.STUCK;
                     meshAgent.speed = 0;
                 }
@@ -217,8 +224,8 @@ public class RobotMovement : MonoBehaviour
                 //Check if path is free
                 if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
                 {
-                    currentState = States.DELIVER;
-                    meshAgent.speed = 2;
+                    currentState = previousState;
+                    meshAgent.speed = 0.5f;
                 }
                 break;
             default:
@@ -259,7 +266,7 @@ public class RobotMovement : MonoBehaviour
                 currentState = States.MANUALGOTO;
                 break;
             case "STATUS":
-                
+                StartCoroutine(StatusCheck());
                 break;
             default:
                 break;
@@ -310,5 +317,12 @@ public class RobotMovement : MonoBehaviour
             }
         }
         goToPoint = mainItem.transform.GetChild(rackNearestPoint);
+    }
+    private IEnumerator StatusCheck()
+    {
+        statusCanvas.SetActive(true);
+        statusText.text = "" + currentState;
+        yield return new WaitForSecondsRealtime(7.5f);
+        statusCanvas.SetActive(false);
     }
 }
