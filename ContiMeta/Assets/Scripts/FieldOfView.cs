@@ -41,7 +41,6 @@ public class FieldOfView : MonoBehaviour
         {
             Sine = Mathf.Sin(Currentangle);
             Cosine = Mathf.Cos(Currentangle);
-            Vector3 RaycastDirection = (transform.forward * Cosine) + (transform.right * Sine);
             Vector3 VertForward = (Vector3.forward * Cosine) + (Vector3.right * Sine);
             //if (Physics.Raycast(transform.position, RaycastDirection, out RaycastHit hit, radius * 3.75f))
             //{
