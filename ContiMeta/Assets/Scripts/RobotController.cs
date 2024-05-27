@@ -322,7 +322,9 @@ public class RobotController : MonoBehaviour
     {
         statusCanvas.SetActive(true);
         statusText.text = "" + currentState;
+        meshAgent.speed = 0;
         yield return new WaitForSecondsRealtime(7.5f);
         statusCanvas.SetActive(false);
+        meshAgent.speed = 0.5f;
     }
 }
