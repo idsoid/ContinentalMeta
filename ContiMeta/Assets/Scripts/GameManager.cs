@@ -145,13 +145,17 @@ public class GameManager : MonoBehaviour
     {
         int robotID = command[0].ToUpper() switch
         {
-            string id when id.ToUpper().Contains("ONE") => 1,
-            string id when id.ToUpper().Contains("TWO") => 2,
-            string id when id.ToUpper().Contains("THREE") => 3,
-            string id when id.ToUpper().Contains("FOUR") => 4,
-            _ => 0
+            string id when id.ToUpper().Contains("ONE") => 0,
+            string id when id.ToUpper().Contains("TWO") => 1,
+            string id when id.ToUpper().Contains("THREE") => 2,
+            string id when id.ToUpper().Contains("FOUR") => 3,
+            _ => 9
         };
-        if (!robotList[robotID].PlayerInRange())
+        if (robotID == 9)
+        {
+            return;
+        }
+        else if (!robotList[robotID].PlayerInRange())
         {
             return;
         }
@@ -164,7 +168,7 @@ public class GameManager : MonoBehaviour
             "STATUS" => Color.blue,
             _ => Color.black,
         };
-        robotList[robotID].SendCommand(command[1]);
+        robotList[robotID].SendCommand(command[1].ToUpper());
     }
     public void MenuCommand (string command)
     {

@@ -49,7 +49,7 @@ public class RobotController : MonoBehaviour
         gameManager = GameManager.Instance;
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.stoppingDistance = 0;
-        currentState = States.DELIVER;
+        currentState = States.STOP;
         statusCanvas.SetActive(false);
     }
     void Update()

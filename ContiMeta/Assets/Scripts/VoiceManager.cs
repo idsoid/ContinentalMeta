@@ -25,7 +25,7 @@ public class VoiceManager : MonoBehaviour
 
     private IEnumerator VoiceCheck()
     {
-        WaitForSecondsRealtime wait = new(0.5f);
+        WaitForSecondsRealtime wait = new(1.0f);
 
         while (true)
         {
@@ -38,6 +38,7 @@ public class VoiceManager : MonoBehaviour
     }
     public void PlayerVoiceDetection(string[] info)
     {
+        tmp.text = "";
         string allinfo = "";
         foreach (var item in info)
         {
@@ -46,6 +47,6 @@ public class VoiceManager : MonoBehaviour
             allinfo += item + " ";
         }
         Debug.Log("string info: " + allinfo + info.Length);
-        //gameManager.VoiceCommand(info);
+        gameManager.VoiceCommand(info);
     }
 }

@@ -253,6 +253,10 @@ MonoBehaviour:
   obstructionMask:
     serializedVersion: 2
     m_Bits: 128
+  playerInRange: 0
+  playerSpotted: 0
+  meshFilter: {fileID: 0}
+  visionConeResolution: 120
 --- !u!195 &26173047
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -287,12 +291,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 531dd5e059876e348af81bc8a5e97094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 545274990}
-  - {fileID: 1069395420}
-  - {fileID: 1822303803}
-  - {fileID: 529200745}
+  rackArea: {fileID: 0}
+  deliveryArea: {fileID: 0}
+  rackPoint: {fileID: 0}
+  deliverypoint: {fileID: 0}
+  rackAreaObj: {fileID: 0}
+  deliveryAreaObj: {fileID: 0}
+  rackPrefab: {fileID: 0}
   player: {fileID: 1087053596}
+  animator: {fileID: 0}
+  statusCanvas: {fileID: 0}
+  statusText: {fileID: 0}
 --- !u!1 &50680982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,7 +1096,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voiceExp: {fileID: 1359702527}
-  tmp: {fileID: 1746047667}
 --- !u!4 &104696467
 Transform:
   m_ObjectHideFlags: 0
@@ -4650,6 +4658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d7a6cd785f571d47a43b641c2ae688d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCenter: {fileID: 0}
   canvasCommandPopupController: {fileID: 96657773}
   canvasCommandPopupHand: {fileID: 1904587739}
 --- !u!1 &1173617908
@@ -11394,7 +11403,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   witRuntimeConfiguration:
-    witConfiguration: {fileID: 11400000, guid: 2379fad32a956dd40ad4aee8de26682d, type: 2}
+    witConfiguration: {fileID: 11400000, guid: dd61e58b571dc43459f5f773fc270fcb, type: 2}
     minKeepAliveVolume: 0.0005
     minKeepAliveTimeInSeconds: 2
     minTranscriptionKeepAliveTimeInSeconds: 1
@@ -11781,7 +11790,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.33333334
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: ef3fce29c4bbf3d4585dbb66f9104d77, type: 2}
   m_BuildHeightMesh: 0
@@ -18102,15 +18111,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d751f5f7e6867e47aa0f7020b4258cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 26173043}
-  robotMovement: {fileID: 26173048}
+  playerNavObstacle: {fileID: 0}
+  playerRightHand: {fileID: 0}
+  playerLeftHand: {fileID: 0}
+  meshRenderers: []
+  robotList: []
   navMeshSurface: {fileID: 1631727532}
-  scanTimer: 0
-  playerInRange: 0
-  playerSpotted: 0
-  startTimer: 0
+  scanTimer: []
+  startTimer: 
   currentPose: 
   menuActive: 0
+  rackOn: 0
 --- !u!4 &1999952800
 Transform:
   m_ObjectHideFlags: 0
