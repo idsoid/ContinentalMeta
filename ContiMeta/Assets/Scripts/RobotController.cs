@@ -20,7 +20,7 @@ public class RobotController : MonoBehaviour
     private Transform player;
     private bool rackOn = false;
     private Transform customPackage, customDeliveryArea;
-    private enum States
+    public enum States
     {
         DELIVER,
         PICKUP,
@@ -34,7 +34,7 @@ public class RobotController : MonoBehaviour
         MANUALBACKUP,
         STUCK,
     }
-    private States currentState;
+    public States currentState;
     private States previousState;
     private NavMeshAgent meshAgent;
     [SerializeField]
@@ -49,7 +49,6 @@ public class RobotController : MonoBehaviour
         gameManager = GameManager.Instance;
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.stoppingDistance = 0;
-        currentState = States.STOP;
         statusCanvas.SetActive(false);
     }
     void Update()
@@ -323,7 +322,7 @@ public class RobotController : MonoBehaviour
         statusCanvas.SetActive(true);
         statusText.text = "" + currentState;
         meshAgent.speed = 0;
-        yield return new WaitForSecondsRealtime(7.5f);
+        yield return new WaitForSecondsRealtime(5f);
         statusCanvas.SetActive(false);
         meshAgent.speed = 0.5f;
     }
