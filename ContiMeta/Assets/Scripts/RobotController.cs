@@ -186,8 +186,9 @@ public class RobotController : MonoBehaviour
                     {
                         rackOn = true;
                         customPackage.SetParent(transform);
-                        currentState = States.FOLLOW;
                         gameManager.PlayerNavObstacle().enabled = false;
+                        meshAgent.stoppingDistance = 2.0f;
+                        currentState = States.FOLLOW;
                         Move(player);
                     }
                 }
@@ -216,6 +217,7 @@ public class RobotController : MonoBehaviour
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
                     gameManager.PlayerNavObstacle().enabled = false;
+                    meshAgent.stoppingDistance = 2.0f;
                     Move(player);
                 }
                 break;
@@ -316,6 +318,15 @@ public class RobotController : MonoBehaviour
             }
         }
         goToPoint = mainItem.transform.GetChild(rackNearestPoint);
+
+        //NavMeshPath path = new(); 
+        //if (NavMesh.CalculatePath(meshAgent.nextPosition, goToPoint.position, NavMesh.AllAreas, path))
+        //{
+        //    if (path.status == NavMeshPathStatus.PathPartial)
+        //    {
+
+        //    }
+        //}
     }
     private IEnumerator StatusCheck()
     {
