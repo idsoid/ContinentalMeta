@@ -49,6 +49,14 @@ public class RobotController : MonoBehaviour
         gameManager = GameManager.Instance;
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.stoppingDistance = 0;
+        if (rackOn)
+        {
+            Move(deliverypoint);
+        }
+        else
+        {
+            Move(rackPoint);
+        }
         statusCanvas.SetActive(false);
     }
     void Update()
@@ -292,13 +300,13 @@ public class RobotController : MonoBehaviour
     private IEnumerator DisableDelivery()
     {
         deliveryAreaObj.SetActive(true);
-        yield return new WaitForSecondsRealtime(15f);
+        yield return new WaitForSecondsRealtime(10f);
         deliveryAreaObj.SetActive(false);
     }
     private IEnumerator EnableRack()
     {
         rackAreaObj.SetActive(false);
-        yield return new WaitForSecondsRealtime(15f);
+        yield return new WaitForSecondsRealtime(10f);
         rackAreaObj.SetActive(true);
     }
     private void NearestPoint(Transform mainItem)

@@ -37,7 +37,6 @@ public class GameManager : MonoBehaviour
     public List<bool> startTimer;
     public string currentPose;
     public bool menuActive = false;
-    public bool rackOn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -58,19 +57,6 @@ public class GameManager : MonoBehaviour
                     ResetScan(i);
                 }
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (!rackOn)
-            {
-                PoseCommand(0, "RIGHTPICKUP");
-            }
-            else
-            {
-                PoseCommand(0, "RIGHTPUTDOWN");
-            }
-            rackOn = !rackOn;
         }
     }
 
