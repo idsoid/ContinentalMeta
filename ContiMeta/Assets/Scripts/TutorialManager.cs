@@ -6,6 +6,8 @@ public class TutorialManager : MonoBehaviour
 {
     [SerializeField]
     private List<GameObject> gestureList;
+    [SerializeField]
+    private List<Animator> gestureAnimatorList;
     private int gestureIndicator = 0;
 
     // Start is called before the first frame update
@@ -33,5 +35,9 @@ public class TutorialManager : MonoBehaviour
             gestureIndicator = 0;
         }
         gestureList[gestureIndicator].SetActive(true);
+    }
+    public void PlayGesture()
+    {
+        gestureAnimatorList[gestureIndicator].Play("Scene", -1, 0f);
     }
 }
