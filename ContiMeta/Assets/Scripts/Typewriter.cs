@@ -87,25 +87,51 @@ public class Typewriter : MonoBehaviour
 {
     public TMP_Text tmp;
     private static Typewriter instance;
-    private List<TypewriterMessage> messages = new List<TypewriterMessage>();
+    private List<TypewriterMessage> messages = new();
     private TypewriterMessage currentMsg = null;
     private int msgIndex = 0;
 
     public static void Add(string msg, Action callback = null)
     {
-        TypewriterMessage typeMsg = new TypewriterMessage(msg, callback);
+        TypewriterMessage typeMsg = new(msg, callback);
         instance.messages.Add(typeMsg);
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public static void Activate()
     {
-        
+        instance.currentMsg = instance.messages[0];
     }
 
+    private void Awake()
+    {
+        instance = this;
+    }
     // Update is called once per frame
     void Update()
     {
-        
+        if (messages.Count > 0 && currentMsg != null)
+        {
+            currentMsg.Update();
+            tmp.text = currentMsg.GetMsg();
+        }
     }
+
+    public void WriteNextMessageInQueue()
+    {
+        //If active, show entire string
+        if (currentMsg != null && currentMsg.IsActive())
+        {
+            tmp.text = currentMsg.GetFullMsgAndCallback();
+            currentMsg = null;
+            return;
+        }
+
+        msgIndex++;
+        if (msgIndex >= messages.Count)
+        {
+            currentMsg = null;
+            tmp.text = "";
+            return;
+        }
+        currentMsg = messages[msgIndex];
+    }    
 }
