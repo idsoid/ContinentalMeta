@@ -90,6 +90,9 @@ public class Typewriter : MonoBehaviour
     private List<TypewriterMessage> messages = new();
     private TypewriterMessage currentMsg = null;
     private int msgIndex = 0;
+    [SerializeField]
+    private GameObject rayInteraction;
+    private Image background;
 
     public static void Add(string msg, Action callback = null)
     {
@@ -104,12 +107,15 @@ public class Typewriter : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        background = GetComponent<Image>();
     }
     // Update is called once per frame
     void Update()
     {
         if (messages.Count > 0 && currentMsg != null)
         {
+            background.enabled = true;
+            rayInteraction.SetActive(true);
             currentMsg.Update();
             tmp.text = currentMsg.GetMsg();
         }
@@ -130,6 +136,8 @@ public class Typewriter : MonoBehaviour
         {
             currentMsg = null;
             tmp.text = "";
+            background.enabled = false;
+            rayInteraction.SetActive(false);
             return;
         }
         currentMsg = messages[msgIndex];

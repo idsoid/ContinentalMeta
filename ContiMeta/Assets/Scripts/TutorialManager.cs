@@ -13,11 +13,13 @@ public class TutorialManager : MonoBehaviour
     [SerializeField]
     private List<Transform> arrowPos = new();
     [SerializeField]
-    private GameObject startZone;
+    private Transform playerCenter;
+    private Vector3 oldRot;
 
     // Start is called before the first frame update
     void Start()
     {
+        oldRot = playerCenter.eulerAngles;
         Typewriter.Add("Hello! Welcome to the AMR VR Project!");
         Typewriter.Add("Let's walk through the gestures and commands, shall we?");
         Typewriter.Activate();
@@ -26,7 +28,10 @@ public class TutorialManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (tutorialStep == 2 && oldRot != playerCenter.eulerAngles)
+        {
+
+        }
     }
 
     public void GestureDisplay(int scroll)
@@ -65,6 +70,7 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Activate();
                 break;
             case 3:
+                Typewriter.Add("Finally, let's move onto our Robot Gestures.");
                 Typewriter.Add("Let's activate our robot! Do the 'Resume' gesture or say, 'Bot One, Go'!");
                 Typewriter.Activate();
                 break;

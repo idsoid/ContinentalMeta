@@ -48,9 +48,13 @@ public class PlayerController : MonoBehaviour
 
         if (Vector2.Distance(new Vector2(playerCenter.position.x, playerCenter.position.z), new Vector2(transform.position.x, transform.position.z)) > 1f)
         {
-            Debug.Log("changed");
+            Debug.Log("teleported");
             playerCenter.position = new Vector3(transform.position.x, 0, transform.position.z);
         }
-        //Debug.Log("distance: " + Vector2.Distance(new Vector2(playerCenter.position.x, playerCenter.position.z), new Vector2(transform.position.x, transform.position.z)));
+        if (Mathf.Abs(playerCenter.rotation.eulerAngles.y - transform.rotation.eulerAngles.y) > 1f)
+        {
+            Debug.Log("rotated");
+            playerCenter.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+        }
     }
 }
