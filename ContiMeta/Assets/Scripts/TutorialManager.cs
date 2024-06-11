@@ -13,25 +13,40 @@ public class TutorialManager : MonoBehaviour
     [SerializeField]
     private List<Transform> arrowPos = new();
     [SerializeField]
-    private Transform playerCenter;
-    private Vector3 oldRot;
+    private Transform player;
+    private Vector3 oldRot, oldPos;
+    private bool conditionMet = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        oldRot = playerCenter.eulerAngles;
+        oldRot = player.eulerAngles;
+        oldPos = player.position;
         Typewriter.Add("Hello! Welcome to the AMR VR Project!");
         Typewriter.Add("Let's walk through the gestures and commands, shall we?");
+        Typewriter.Add("We will start off with the Player Gestures!");
         Typewriter.Activate();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (tutorialStep == 2 && oldRot != playerCenter.eulerAngles)
+        if (conditionMet)
         {
-
+            tutorialStep++;
+            conditionMet = false;
+            StepByStep();
         }
+        //if (tutorialStep == 2 && oldRot != playerCenter.eulerAngles)
+        //{
+
+        //}
+        if (!conditionMet)
+        {
+            StepCheck();
+        }
+        Debug.Log("tutorial step: " + tutorialStep);
+        Debug.Log("conditions met: " + conditionMet);
     }
 
     public void GestureDisplay(int scroll)
@@ -52,14 +67,12 @@ public class TutorialManager : MonoBehaviour
     {
         gestureAnimatorList[gestureIndicator].Play("Scene", -1, 0f);
     }
-    public void StepByStep()
+    private void StepByStep()
     {
         switch (tutorialStep)
         {
             case 1:
-                Typewriter.Add("We will start off with the Player Gestures.");
                 Typewriter.Add("First up, we have the Teleport Gesture! Hold out your index finger and thumb, with your palm facing upwards. " +
-                    "An arc should appear indicating where you want to be teleported." +
                     "To confirm the teleportation, pinch your finger and thumb.");
                 Typewriter.Activate();
                 break;
@@ -70,9 +83,38 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Activate();
                 break;
             case 3:
-                Typewriter.Add("Finally, let's move onto our Robot Gestures.");
+                Typewriter.Add("Finally, let's move onto our Robot Gestures! Move to the front of the robot.");
+                Typewriter.Activate();
+                break;
+            case 4:
                 Typewriter.Add("Let's activate our robot! Do the 'Resume' gesture or say, 'Bot One, Go'!");
                 Typewriter.Activate();
+                break;
+            default:
+                break;
+        }
+    }
+    private void StepCheck()
+    {
+        switch (tutorialStep)
+        {
+            case 1:
+                if (oldPos != player.position)
+                {
+                    conditionMet = true;
+                }
+                break;
+            case 2:
+                if (oldRot != player.eulerAngles)
+                {
+                    conditionMet = true;
+                }
+                break;
+            case 3:
+                if (player)
+                {
+
+                }
                 break;
             default:
                 break;

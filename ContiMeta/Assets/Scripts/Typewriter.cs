@@ -93,7 +93,8 @@ public class Typewriter : MonoBehaviour
     [SerializeField]
     private GameObject rayInteraction;
     private Image background;
-
+    private bool empty = false;
+    
     public static void Add(string msg, Action callback = null)
     {
         TypewriterMessage typeMsg = new(msg, callback);
@@ -136,10 +137,11 @@ public class Typewriter : MonoBehaviour
         {
             currentMsg = null;
             tmp.text = "";
+            messages.Clear();
             background.enabled = false;
             rayInteraction.SetActive(false);
             return;
         }
         currentMsg = messages[msgIndex];
-    }    
+    }
 }

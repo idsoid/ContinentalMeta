@@ -3572,7 +3572,7 @@ MonoBehaviour:
   - {fileID: 1882539327}
   gestureAnimatorList: []
   arrowPos: []
-  playerCenter: {fileID: 4839811}
+  player: {fileID: 1996339983}
 --- !u!1 &359148219
 GameObject:
   m_ObjectHideFlags: 0
@@ -16993,7 +16993,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1160213122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19114,7 +19114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1318753317
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26814,6 +26814,11 @@ MonoBehaviour:
   playerCenter: {fileID: 4839811}
   canvasCommandPopupController: {fileID: 1745664689}
   canvasCommandPopupHand: {fileID: 1955665706}
+--- !u!4 &1996339983 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2483171112402263010, guid: f54012181eacade4ea242c65f804720f, type: 3}
+  m_PrefabInstance: {fileID: 1004170996}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2010606877
 GameObject:
   m_ObjectHideFlags: 0
