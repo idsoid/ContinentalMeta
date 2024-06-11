@@ -13,15 +13,16 @@ public class TutorialManager : MonoBehaviour
     [SerializeField]
     private List<Transform> arrowPos = new();
     [SerializeField]
-    private Transform player;
-    private Vector3 oldRot, oldPos;
-    private bool conditionMet = true;
+    private Transform player, robotSpot;
+    private Vector2 oldPos;
+    private float oldRotY;
+    public bool conditionMet = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        oldRot = player.eulerAngles;
-        oldPos = player.position;
+        oldRotY = player.eulerAngles.y;
+        oldPos = new Vector2(player.position.x, player.position.z);
         Typewriter.Add("Hello! Welcome to the AMR VR Project!");
         Typewriter.Add("Let's walk through the gestures and commands, shall we?");
         Typewriter.Add("We will start off with the Player Gestures!");
@@ -45,8 +46,7 @@ public class TutorialManager : MonoBehaviour
         {
             StepCheck();
         }
-        Debug.Log("tutorial step: " + tutorialStep);
-        Debug.Log("conditions met: " + conditionMet);
+        Debug.Log("distance: " + Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)));
     }
 
     public void GestureDisplay(int scroll)
@@ -77,8 +77,8 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Activate();
                 break;
             case 2:
-                Typewriter.Add("Next, we have the Rotate Gesture! Have your index finger and thumb make a reversed 'C' shape, with it facing towards you. " +
-                    "Two arrows will appear, indicating where your orientation will face. Move your hand in the direction you desire." +
+                Typewriter.Add("Next, we have the Rotate Gesture! Have your index finger and thumb make a reversed 'C' shape. " +
+                    "Two arrows will appear, move your hand in the direction you desire. " +
                     "To confirm the rotation, pinch your finger and thumb.");
                 Typewriter.Activate();
                 break;
@@ -99,22 +99,26 @@ public class TutorialManager : MonoBehaviour
         switch (tutorialStep)
         {
             case 1:
-                if (oldPos != player.position)
+                if (oldPos != new Vector2(player.position.x, player.position.z))
                 {
                     conditionMet = true;
                 }
+                oldRotY = player.eulerAngles.y;
                 break;
             case 2:
-                if (oldRot != player.eulerAngles)
+                if (oldRotY != player.eulerAngles.y)
                 {
                     conditionMet = true;
                 }
                 break;
             case 3:
-                if (player)
+                if (Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)) <= 1.5f)
                 {
-
+                    conditionMet = true;
                 }
+                break;
+            case 4:
+
                 break;
             default:
                 break;
