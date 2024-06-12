@@ -155,6 +155,7 @@ public class RobotController : MonoBehaviour
                 }
                 break;
             case States.STOP:
+                meshAgent.speed = 0;
                 break;
             case States.FOLLOW:
                 //Path blocked

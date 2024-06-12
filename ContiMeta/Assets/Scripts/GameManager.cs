@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private NavMeshObstacle playerNavObstacle;
     [SerializeField]
-    private Transform playerRightHand, playerLeftHand;
+    private Transform playerRightHand, playerLeftHand, player;
     private int closestPackage;
     private int closestDeliveryArea;
     [SerializeField]
@@ -154,6 +154,28 @@ public class GameManager : MonoBehaviour
             "STATUS" => Color.blue,
             _ => Color.black,
         };
+        //switch (command[1])
+        //{
+        //    case "RIGHTPICKUP":
+        //        PackageCheck(playerRightHand, robotID);
+        //        robotList[robotID].SendCommand("MANUALPICKUP");
+        //        break;
+        //    case "LEFTPICKUP":
+        //        PackageCheck(playerLeftHand, robotID);
+        //        robotList[robotID].SendCommand("MANUALPICKUP");
+        //        break;
+        //    case "RIGHTPUTDOWN":
+        //        AreaCheck(playerRightHand, robotID);
+        //        robotList[robotID].SendCommand("MANUALPUTDOWN");
+        //        break;
+        //    case "LEFTPUTDOWN":
+        //        AreaCheck(playerLeftHand, robotID);
+        //        robotList[robotID].SendCommand("MANUALPUTDOWN");
+        //        break;
+        //    default:
+        //        robotList[robotID].SendCommand(command);
+        //        break;
+        //}
         robotList[robotID].SendCommand(command[1].ToUpper());
     }
     public void MenuCommand (string command)
