@@ -7,6 +7,8 @@ using TMPro;
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField]
+    private List<GameObject> circleGuides;
+    [SerializeField]
     private List<Animator> gestureList, gestureAnimatorList;
     private int gestureIndicator = 0;
     private int tutorialStep = 0;
@@ -88,8 +90,10 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Add("Finally, let's move onto our Robot Gestures! Hold out the upcoming gestures for a few seconds for the robot to register the command.");
                 Typewriter.Add("Now, move to the front of the robot!");
                 Typewriter.Activate();
+                circleGuides[0].SetActive(true);
                 break;
             case 4:
+                circleGuides[0].SetActive(false);
                 gestureAnimatorList[1].gameObject.SetActive(false);
                 Typewriter.Add("Let's activate our robot! First, we have the Follow Gesture. " +
                     "Close all fingers, stick out your thumb and point it towards yourself.");
@@ -108,14 +112,18 @@ public class TutorialManager : MonoBehaviour
                     "Open up your hand again, but with your palm facing inwards. " +
                     "Make sure your hand is near a package");
                 Typewriter.Activate();
+                circleGuides[1].SetActive(true);
                 break;
             case 7:
+                circleGuides[1].SetActive(false);
                 Typewriter.Add("Next, we have the Put Down Gesture. " +
                     "Close your hand, with your palm still facing inwards. " +
                     "Make sure your hand is near a delivery area.");
                 Typewriter.Activate();
+                circleGuides[2].SetActive(true);
                 break;
             case 8:
+                circleGuides[2].SetActive(false);
                 Typewriter.Add("Next, we have the Status Gesture. " +
                     "A simple thumbs up facing the robot.");
                 Typewriter.Activate();
@@ -129,7 +137,9 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 10:
                 Typewriter.Add("And that's the tutorial! If you ever want to revisit certain gestures, go over to the projector to cycle through them.");
+                Typewriter.Add("Feel free to exit the tutorial room by going to the door and holding your hand on the handle.");
                 Typewriter.Activate();
+                circleGuides[3].SetActive(true);
                 break;
             default:
                 break;
@@ -198,50 +208,63 @@ public class TutorialManager : MonoBehaviour
                 break;
         }
     }
-
-    
     public void PoseRestrictor(string command)
     {
         if (textGuide.activeSelf)
         {
             return;
         }
-
-        GameManager.Instance.PoseCommand(0, command);
         switch (command)
         {
-            case "GO":
+            case "FOLLOW":
                 if (tutorialStep >= 4)
                 {
-
+                    GameManager.Instance.PlayerPoseDetection(command);
                 }
                 break;
             case "STOP":
                 if (tutorialStep >= 5)
                 {
-
+                    GameManager.Instance.PlayerPoseDetection(command);
                 }
                 break;
-            case "FOLLOW":
-                
-                break;
             case "RIGHTPICKUP":
-                
+                if (tutorialStep >= 6)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
                 break;
             case "LEFTPICKUP":
-                
+                if (tutorialStep >= 6)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
                 break;
             case "RIGHTPUTDOWN":
-                
+                if (tutorialStep >= 7)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
                 break;
             case "LEFTPUTDOWN":
-                
+                if (tutorialStep >= 7)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
                 break;
             case "STATUS":
-                
+                if (tutorialStep >= 8)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
+                break;
+            case "GO":
+                if (tutorialStep >= 9)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
                 break;
             default:
-                
                 break;
         }
     }

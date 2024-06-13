@@ -120,6 +120,8 @@ public class Typewriter : MonoBehaviour
             currentMsg.Update();
             tmp.text = currentMsg.GetMsg();
         }
+        Debug.Log("count: " + messages.Count);
+        Debug.Log("msgindex: " + msgIndex);
     }
 
     public void WriteNextMessageInQueue()
@@ -136,8 +138,10 @@ public class Typewriter : MonoBehaviour
         if (msgIndex >= messages.Count)
         {
             currentMsg = null;
-            instance.tmp.gameObject.SetActive(false);
+            tmp.text = "";
+            tmp.gameObject.SetActive(false);
             messages.Clear();
+            msgIndex = 0;
             background.enabled = false;
             rayInteraction.SetActive(false);
             return;
