@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> gestureList;
-    [SerializeField]
-    private List<Animator> gestureAnimatorList;
+    private List<Animator> gestureList, gestureAnimatorList;
     private int gestureIndicator = 0;
     private int tutorialStep = 0;
     [SerializeField]
@@ -19,7 +18,7 @@ public class TutorialManager : MonoBehaviour
     private float oldRotY;
     private bool conditionMet = true;
     [SerializeField]
-    private Image background;
+    private GameObject textGuide;
     [SerializeField]
     private RobotManager robot;
 
@@ -37,25 +36,21 @@ public class TutorialManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (conditionMet)
+        if (conditionMet && !textGuide.activeSelf)
         {
             tutorialStep++;
             conditionMet = false;
             StepByStep();
         }
-        else if (!conditionMet && !background.enabled)
+        else if (!conditionMet && !textGuide.activeSelf)
         {
             StepCheck();
-        }
-        if (gestureAnimatorList[0].GetCurrentAnimatorStateInfo(0).length < gestureAnimatorList[0].GetCurrentAnimatorStateInfo(0).normalizedTime)
-        {
-            Debug.Log("playing");
         }
     }
 
     public void GestureDisplay(int scroll)
     {
-        gestureList[gestureIndicator].SetActive(false);
+        gestureList[gestureIndicator].gameObject.SetActive(false);
         gestureIndicator += scroll;
         if (gestureIndicator < 0)
         {
@@ -65,11 +60,11 @@ public class TutorialManager : MonoBehaviour
         {
             gestureIndicator = 0;
         }
-        gestureList[gestureIndicator].SetActive(true);
+        gestureList[gestureIndicator].gameObject.SetActive(true);
     }
     public void PlayGesture()
     {
-        gestureAnimatorList[gestureIndicator].Play("Scene", -1, 0f);
+        gestureList[gestureIndicator].Play("Scene", -1, 0f);
     }
     private void StepByStep()
     {
@@ -80,53 +75,57 @@ public class TutorialManager : MonoBehaviour
                     "To confirm the teleportation, pinch your finger and thumb.");
                 Typewriter.Activate();
                 gestureAnimatorList[0].gameObject.SetActive(true);
-                if (gestureAnimatorList[0].GetCurrentAnimatorStateInfo(0).length < gestureAnimatorList[0].GetCurrentAnimatorStateInfo(0).normalizedTime)
-                {
-                    gestureAnimatorList[0].Play("Scene");
-                }
                 break;
             case 2:
+                gestureAnimatorList[0].gameObject.SetActive(false);
                 Typewriter.Add("Next, we have the Rotate Gesture! Have your index finger and thumb make a reversed 'C' shape. " +
                     "Two arrows will appear, move your hand in the direction you desire. " +
                     "To confirm the rotation, pinch your finger and thumb.");
                 Typewriter.Activate();
+                gestureAnimatorList[1].gameObject.SetActive(true);
                 break;
             case 3:
-                Typewriter.Add("Finally, let's move onto our Robot Gestures! Hold out the following gestures for a few seconds for the robot to register the command. " +
-                    "Move to the front of the robot.");
+                Typewriter.Add("Finally, let's move onto our Robot Gestures! Hold out the upcoming gestures for a few seconds for the robot to register the command.");
+                Typewriter.Add("Now, move to the front of the robot!");
                 Typewriter.Activate();
                 break;
             case 4:
-                Typewriter.Add("Let's activate our robot! First, we have the Resume Gesture. " + 
-                    "Close your hand and point out only your index finger towards the front. ");
+                gestureAnimatorList[1].gameObject.SetActive(false);
+                Typewriter.Add("Let's activate our robot! First, we have the Follow Gesture. " +
+                    "Close all fingers, stick out your thumb and point it towards yourself.");
                 Typewriter.Activate();
+                gestureAnimatorList[2].gameObject.SetActive(true);
                 break;
             case 5:
+                gestureAnimatorList[2].gameObject.SetActive(false);
                 Typewriter.Add("Next, we have the Stop Gesture. " +
                     "Open up your hand, with your palm facing the robot.");
                 Typewriter.Activate();
+                gestureAnimatorList[3].gameObject.SetActive(true);
                 break;
             case 6:
-                Typewriter.Add("Next, we have the Follow Gesture. " +
-                    "Close all fingers, stick out your thumb and point it towards yourself.");
-                Typewriter.Activate();
-                break;
-            case 7:
                 Typewriter.Add("Next, we have the Pick Up Gesture. " +
                     "Open up your hand again, but with your palm facing inwards. " +
                     "Make sure your hand is near a package");
                 Typewriter.Activate();
                 break;
-            case 8:
+            case 7:
                 Typewriter.Add("Next, we have the Put Down Gesture. " +
                     "Close your hand, with your palm still facing inwards. " +
                     "Make sure your hand is near a delivery area.");
                 Typewriter.Activate();
                 break;
-            case 9:
+            case 8:
                 Typewriter.Add("Next, we have the Status Gesture. " +
                     "A simple thumbs up facing the robot.");
                 Typewriter.Activate();
+                break;
+            case 9:
+                gestureAnimatorList[3].gameObject.SetActive(false);
+                Typewriter.Add("Last but not least, we have the Resume Gesture. " +
+                    "Close your hand and point out only your index finger towards the front. ");
+                Typewriter.Activate();
+                gestureAnimatorList[4].gameObject.SetActive(true);
                 break;
             case 10:
                 Typewriter.Add("And that's the tutorial! If you ever want to revisit certain gestures, go over to the projector to cycle through them.");
@@ -154,13 +153,13 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 3:
-                if (Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)) <= 1.5f)
+                if (Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)) <= 1f)
                 {
                     conditionMet = true;
                 }
                 break;
             case 4:
-                if (robot.StoreCommand == "GO")
+                if (robot.StoreCommand == "FOLLOW")
                 {
                     conditionMet = true;
                 }
@@ -172,25 +171,25 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 6:
-                if (robot.StoreCommand == "FOLLOW")
-                {
-                    conditionMet = true;
-                }
-                break;
-            case 7:
                 if (robot.StoreCommand.Contains("PICKUP"))
                 {
                     conditionMet = true;
                 }
                 break;
-            case 8:
+            case 7:
                 if (robot.StoreCommand.Contains("PUTDOWN"))
                 {
                     conditionMet = true;
                 }
                 break;
-            case 9:
+            case 8:
                 if (robot.StoreCommand == "STATUS")
+                {
+                    conditionMet = true;
+                }
+                break;
+            case 9:
+                if (robot.StoreCommand == "GO")
                 {
                     conditionMet = true;
                 }
@@ -200,10 +199,10 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    //postpone
+    
     public void PoseRestrictor(string command)
     {
-        if (background.enabled)
+        if (textGuide.activeSelf)
         {
             return;
         }

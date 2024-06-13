@@ -93,7 +93,6 @@ public class Typewriter : MonoBehaviour
     [SerializeField]
     private GameObject rayInteraction;
     private Image background;
-    private bool empty = false;
     
     public static void Add(string msg, Action callback = null)
     {
@@ -103,6 +102,7 @@ public class Typewriter : MonoBehaviour
     public static void Activate()
     {
         instance.currentMsg = instance.messages[0];
+        instance.tmp.gameObject.SetActive(true);
     }
 
     private void Awake()
@@ -136,7 +136,7 @@ public class Typewriter : MonoBehaviour
         if (msgIndex >= messages.Count)
         {
             currentMsg = null;
-            tmp.text = "";
+            instance.tmp.gameObject.SetActive(false);
             messages.Clear();
             background.enabled = false;
             rayInteraction.SetActive(false);

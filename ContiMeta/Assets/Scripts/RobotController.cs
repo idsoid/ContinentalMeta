@@ -314,6 +314,11 @@ public class RobotController : MonoBehaviour
     {
         for (int i = 0; i < mainItem.transform.childCount; i++)
         {
+            if (!mainItem.transform.GetChild(i).CompareTag("Point"))
+            {
+                continue;
+            }
+
             if (i == 0)
             {
                 rackNearestPoint = 0;
