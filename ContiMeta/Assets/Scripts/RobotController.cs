@@ -121,6 +121,7 @@ public class RobotController : MonoBehaviour
                         rackOn = true;
                         rackObj = Instantiate(rackPrefab, rackArea);
                         rackObj.transform.SetParent(transform);
+                        customPackage = rackObj.transform;
                         StartCoroutine(EnableRack());
                         currentState = States.DELIVER;
                         Move(deliverypoint);
@@ -185,7 +186,7 @@ public class RobotController : MonoBehaviour
                         Move(customPackage);
                     }
                 }
-                break; 
+                break;
             case States.MANUALPICKUP:
                 Move(customPackage);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
@@ -248,6 +249,11 @@ public class RobotController : MonoBehaviour
     }
     public void ReceiveCommand(string command)
     {
+        if (InvalidCommand(command))
+        {
+            return;
+        }
+
         switch (command)
         {
             case "GO":
@@ -280,6 +286,26 @@ public class RobotController : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+    private bool InvalidCommand(string command)
+    {
+        if (currentState == States.MANUALGOTO || currentState == States.MANUALPICKUP || currentState == States.MANUALPUTDOWN || currentState == States.MANUALBACKUP || 
+            currentState == States.PICKUP || currentState == States.PUTDOWN || currentState == States.BACKUP)
+        {
+            return true;
+        }
+        else if (rackOn && command == "MANUALPICKUP")
+        {
+            return true;
+        }
+        else if (!rackOn && command == "MANUALPUTDOWN")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     private void DefaultAgentSettings()
