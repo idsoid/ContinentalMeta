@@ -23,9 +23,11 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField]
+    private GameObject robotFOV;
+    [SerializeField]
     private NavMeshObstacle playerNavObstacle;
     [SerializeField]
-    private Transform playerRightHand, playerLeftHand, player;
+    private Transform playerRightHand, playerLeftHand;
     private int closestPackage;
     private int closestDeliveryArea;
     [SerializeField]
@@ -58,6 +60,11 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        //if (Physics.OverlapSphere(playerRightHand, ))
+        //{
+
+        //}
     }
 
     //Player Stuff
@@ -89,6 +96,10 @@ public class GameManager : MonoBehaviour
     public void ToggleMenu()
     {
         menuActive = !menuActive;
+    }
+    public void ToggleRobotFOV()
+    {
+        robotFOV.SetActive(!robotFOV.activeSelf);
     }
     public bool GetMenuActive()
     {
