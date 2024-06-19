@@ -140,6 +140,7 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Add("Feel free to exit the tutorial room by going to the door and holding your hand on the handle.");
                 Typewriter.Activate();
                 circleGuides[3].SetActive(true);
+                circleGuides[4].SetActive(true);
                 break;
             default:
                 break;

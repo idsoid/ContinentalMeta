@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SamplesInfoPanel
   - Point
+  - Exit
   layers:
   - Default
   - TransparentFX

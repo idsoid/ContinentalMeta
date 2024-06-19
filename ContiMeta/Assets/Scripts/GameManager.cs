@@ -60,11 +60,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
-        //if (Physics.OverlapSphere(playerRightHand, ))
-        //{
-
-        //}
     }
 
     //Player Stuff
