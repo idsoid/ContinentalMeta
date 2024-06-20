@@ -338,13 +338,40 @@ public class RobotController : MonoBehaviour
     }
     private void NearestPoint(Transform mainItem)
     {
+        NavMeshPath path = new();
+        int pointCount = 0;
+        List<int> invalidPoints = new();
         for (int i = 0; i < mainItem.transform.childCount; i++)
         {
             if (!mainItem.transform.GetChild(i).CompareTag("Point"))
             {
                 continue;
             }
+            pointCount++;
 
+            Vector3 pointPos = mainItem.transform.GetChild(i).position;
+            NavMesh.CalculatePath(meshAgent.nextPosition, pointPos, NavMesh.AllAreas, path);
+            Debug.Log(path.status);
+            if (path.status == NavMeshPathStatus.PathInvalid)
+            {
+                Debug.Log("invalid: " + i);
+                invalidPoints.Add(i);
+            }
+        }
+
+        if (invalidPoints.Count == pointCount)
+        {
+            Debug.Log("invalid points on item");
+            return;
+        }
+
+        for (int i = 0; i < mainItem.transform.childCount; i++)
+        {
+            if (!mainItem.transform.GetChild(i).CompareTag("Point") || invalidPoints.Contains(i))
+            {
+                continue;
+            }
+            
             if (i == 0)
             {
                 rackNearestPoint = 0;
@@ -358,15 +385,6 @@ public class RobotController : MonoBehaviour
             }
         }
         goToPoint = mainItem.transform.GetChild(rackNearestPoint);
-
-        //NavMeshPath path = new(); 
-        //if (NavMesh.CalculatePath(meshAgent.nextPosition, goToPoint.position, NavMesh.AllAreas, path))
-        //{
-        //    if (path.status == NavMeshPathStatus.PathPartial)
-        //    {
-
-        //    }
-        //}
     }
     private IEnumerator StatusCheck()
     {

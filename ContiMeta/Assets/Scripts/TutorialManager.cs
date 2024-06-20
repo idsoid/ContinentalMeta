@@ -7,13 +7,9 @@ using TMPro;
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> circleGuides;
-    [SerializeField]
-    private List<Animator> gestureList, gestureAnimatorList;
+    private List<GameObject> circleGuides, gestureList, gestureAnimatorList;
     private int gestureIndicator = 0;
-    private int tutorialStep = 0;
-    [SerializeField]
-    private List<Transform> goalPos = new();
+    public int tutorialStep = 0;
     [SerializeField]
     private Transform player, robotSpot;
     private Vector2 oldPos;
@@ -52,7 +48,7 @@ public class TutorialManager : MonoBehaviour
 
     public void GestureDisplay(int scroll)
     {
-        gestureList[gestureIndicator].gameObject.SetActive(false);
+        gestureList[gestureIndicator].SetActive(false);
         gestureIndicator += scroll;
         if (gestureIndicator < 0)
         {
@@ -62,11 +58,14 @@ public class TutorialManager : MonoBehaviour
         {
             gestureIndicator = 0;
         }
-        gestureList[gestureIndicator].gameObject.SetActive(true);
+        gestureList[gestureIndicator].SetActive(true);
     }
     public void PlayGesture()
     {
-        gestureList[gestureIndicator].Play("Scene", -1, 0f);
+        if (gestureList[gestureIndicator].TryGetComponent<Animator>(out Animator animator))
+        {
+            animator.Play("Scene", -1, 0f);
+        }
     }
     private void StepByStep()
     {
@@ -76,67 +75,81 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Add("First up, we have the Teleport Gesture! Hold out your index finger and thumb, with your palm facing upwards. " +
                     "To confirm the teleportation, pinch your finger and thumb.");
                 Typewriter.Activate();
-                gestureAnimatorList[0].gameObject.SetActive(true);
+                gestureAnimatorList[0].SetActive(true);
                 break;
             case 2:
-                gestureAnimatorList[0].gameObject.SetActive(false);
-                Typewriter.Add("Next, we have the Rotate Gesture! Have your index finger and thumb make a reversed 'C' shape. " +
+                gestureAnimatorList[0].SetActive(false);
+                Typewriter.Add("Next, we have the Rotate Gesture! Have your index finger and thumb make a 'C'/reversed 'C' shape. (Depending on the hand) " +
                     "Two arrows will appear, move your hand in the direction you desire. " +
                     "To confirm the rotation, pinch your finger and thumb.");
                 Typewriter.Activate();
-                gestureAnimatorList[1].gameObject.SetActive(true);
+                gestureAnimatorList[1].SetActive(true);
                 break;
             case 3:
-                Typewriter.Add("Finally, let's move onto our Robot Gestures! Hold out the upcoming gestures for a few seconds for the robot to register the command.");
+                gestureAnimatorList[1].SetActive(false);
+                Typewriter.Add("Finally, let's move onto our Robot Gestures! Hold out the upcoming gestures for a few seconds for the robot to register the command. ");
                 Typewriter.Add("Now, move to the front of the robot!");
                 Typewriter.Activate();
                 circleGuides[0].SetActive(true);
                 break;
             case 4:
                 circleGuides[0].SetActive(false);
-                gestureAnimatorList[1].gameObject.SetActive(false);
                 Typewriter.Add("Let's activate our robot! First, we have the Follow Gesture. " +
                     "Close all fingers, stick out your thumb and point it towards yourself.");
                 Typewriter.Activate();
-                gestureAnimatorList[2].gameObject.SetActive(true);
+                gestureAnimatorList[2].SetActive(true);
                 break;
             case 5:
-                gestureAnimatorList[2].gameObject.SetActive(false);
+                gestureAnimatorList[2].SetActive(false);
                 Typewriter.Add("Next, we have the Stop Gesture. " +
                     "Open up your hand, with your palm facing the robot.");
                 Typewriter.Activate();
-                gestureAnimatorList[3].gameObject.SetActive(true);
+                gestureAnimatorList[3].SetActive(true);
                 break;
             case 6:
-                Typewriter.Add("Next, we have the Pick Up Gesture. " +
-                    "Open up your hand again, but with your palm facing inwards. " +
-                    "Make sure your hand is near a package");
+                gestureAnimatorList[3].SetActive(false);
+                Typewriter.Add("Next, we have the Pick Up Gesture. Command the robot to Follow you again, and go to the package. " +
+                    "Close your hand, with your palm still facing inwards. " +
+                    "Make sure your hand is near the package.");
                 Typewriter.Activate();
                 circleGuides[1].SetActive(true);
+                gestureAnimatorList[4].SetActive(true);
                 break;
             case 7:
                 circleGuides[1].SetActive(false);
-                Typewriter.Add("Next, we have the Put Down Gesture. " +
-                    "Close your hand, with your palm still facing inwards. " +
-                    "Make sure your hand is near a delivery area.");
+                gestureAnimatorList[4].SetActive(false);
+                Typewriter.Add("Next, we have the Put Down Gesture. The robot should still Follow, so proceed to the delivery area. " +
+                    "Open up your hand again, but with your palm facing inwards. " +
+                    "Make sure your hand is near the delivery area");
                 Typewriter.Activate();
                 circleGuides[2].SetActive(true);
+                gestureAnimatorList[5].SetActive(true);
                 break;
             case 8:
                 circleGuides[2].SetActive(false);
+                gestureAnimatorList[5].SetActive(false);
                 Typewriter.Add("Next, we have the Status Gesture. " +
                     "A simple thumbs up facing the robot.");
                 Typewriter.Activate();
+                gestureAnimatorList[6].SetActive(true);
                 break;
             case 9:
-                gestureAnimatorList[3].gameObject.SetActive(false);
+                gestureAnimatorList[6].SetActive(false);
                 Typewriter.Add("Last but not least, we have the Resume Gesture. " +
                     "Close your hand and point out only your index finger towards the front. ");
                 Typewriter.Activate();
-                gestureAnimatorList[4].gameObject.SetActive(true);
+                gestureAnimatorList[7].SetActive(true);
                 break;
             case 10:
-                Typewriter.Add("And that's the tutorial! If you ever want to revisit certain gestures, go over to the projector to cycle through them.");
+                gestureAnimatorList[7].SetActive(false);
+                Typewriter.Add("If you ever need it, there is a Menu Gesture. It contains robot and miscellaneous functions, along with the transcription of the voice detection. " + 
+                    "Make the 'OK' symbol on your left hand, with the 'O' facing up, to toggle On/Off.");
+                Typewriter.Activate();
+                gestureAnimatorList[8].SetActive(true);
+                break;
+            case 11:
+                gestureAnimatorList[8].SetActive(false);
+                Typewriter.Add("And that's the tutorial! If you ever want to revisit certain gestures, go over to the projector to cycle through them. ");
                 Typewriter.Add("Feel free to exit the tutorial room by going to the door and holding your hand on the handle.");
                 Typewriter.Activate();
                 circleGuides[3].SetActive(true);
@@ -201,6 +214,12 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 9:
                 if (robot.StoreCommand == "GO")
+                {
+                    conditionMet = true;
+                }
+                break;
+            case 10:
+                if (GameManager.Instance.menuActive)
                 {
                     conditionMet = true;
                 }
