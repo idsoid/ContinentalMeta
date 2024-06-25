@@ -7,8 +7,10 @@ using TMPro;
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> circleGuides, gestureList, gestureAnimatorList;
-    private int gestureIndicator = 0;
+    private GameObject playerMenu, robotMenu;
+    private bool menuToggle = true;
+    [SerializeField]
+    private List<GameObject> circleGuides, gestureList, gestureAnimatorList, gestureInfo;
     public int tutorialStep = 0;
     [SerializeField]
     private Transform player, robotSpot;
@@ -16,7 +18,7 @@ public class TutorialManager : MonoBehaviour
     private float oldRotY;
     private bool conditionMet = true;
     [SerializeField]
-    private GameObject textGuide;
+    private GameObject textGuide, gestureBackground;
     [SerializeField]
     private RobotManager robot;
 
@@ -44,29 +46,58 @@ public class TutorialManager : MonoBehaviour
         {
             StepCheck();
         }
-    }
 
-    public void GestureDisplay(int scroll)
+        foreach (var gesture in gestureAnimatorList)
+        {
+            if (gesture.activeSelf)
+            {
+                gestureBackground.SetActive(true);
+                break;
+            }
+            else if (gestureBackground.activeSelf)
+            {
+                gesture.SetActive(false);
+            }
+        }
+    }
+    
+    public void ToggleGesture()
     {
-        gestureList[gestureIndicator].SetActive(false);
-        gestureIndicator += scroll;
-        if (gestureIndicator < 0)
+        foreach (var gesture in gestureList)
         {
-            gestureIndicator = gestureList.Count - 1;
+            if (gesture.activeSelf)
+            {
+                gesture.SetActive(false);
+                break;
+            }
         }
-        else if (gestureIndicator > gestureList.Count - 1)
+        foreach (var info in gestureInfo)
         {
-            gestureIndicator = 0;
+            if (info.activeSelf)
+            {
+                info.SetActive(false);
+                break;
+            }
         }
-        gestureList[gestureIndicator].SetActive(true);
+    }
+    public void SwitchMenu()
+    {
+        menuToggle = !menuToggle;
+        playerMenu.SetActive(menuToggle);
+        robotMenu.SetActive(!menuToggle);
     }
     public void PlayGesture()
     {
-        if (gestureList[gestureIndicator].TryGetComponent<Animator>(out Animator animator))
+        foreach (var gesture in gestureList)
         {
-            animator.Play("Scene", -1, 0f);
+            if (gesture.TryGetComponent<Animator>(out Animator animator) && gesture.activeSelf)
+            {
+                animator.Play("Scene", -1, 0f);
+                break;
+            }
         }
     }
+
     private void StepByStep()
     {
         switch (tutorialStep)
