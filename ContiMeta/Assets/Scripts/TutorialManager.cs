@@ -7,7 +7,7 @@ using TMPro;
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject playerMenu, robotMenu;
+    private GameObject playerMenu, robotMenu, robotFOV;
     private bool menuToggle = true;
     [SerializeField]
     private List<GameObject> circleGuides, gestureList, gestureAnimatorList, gestureInfo;
@@ -18,6 +18,7 @@ public class TutorialManager : MonoBehaviour
     private Vector2 oldPos;
     private float oldRotY;
     private bool conditionMet = true;
+    private bool gestureOn = false;
     [SerializeField]
     private GameObject textGuide, gestureBackground;
     [SerializeField]
@@ -26,6 +27,7 @@ public class TutorialManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        robotFOV.SetActive(false);
         oldRotY = player.eulerAngles.y;
         oldPos = new Vector2(player.position.x, player.position.z);
         Typewriter.Add("Hello! Welcome to the AMR VR Project!");
@@ -61,7 +63,7 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        if (!textGuide.activeSelf)
+        if (gestureOn && !textGuide.activeSelf)
         {
             gestureAnimatorList[gestureAnimatorStep].SetActive(true);
         }
@@ -112,6 +114,7 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Add("First up, we have the Teleport Gesture! Hold out your index finger and thumb, with your palm facing upwards. " +
                     "To confirm the teleportation, pinch your finger and thumb. ");
                 Typewriter.Activate();
+                gestureOn = true;
                 break;
             case 2:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
@@ -124,16 +127,20 @@ public class TutorialManager : MonoBehaviour
             case 3:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 Typewriter.Add("Finally, let's move onto our Robot Gestures! Hold out the upcoming gestures for a few seconds for the robot to register the command. ");
+                Typewriter.Add("The green arc you see is the robot's vision.");
                 Typewriter.Add("Now, move to the front of the robot!");
                 Typewriter.Activate();
+                gestureOn = false;
                 circleGuides[0].SetActive(true);
-                gestureAnimatorStep++;
+                robotFOV.SetActive(true);
                 break;
             case 4:
+                circleGuides[0].SetActive(false);
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 Typewriter.Add("Let's activate our robot! First, we have the Follow Gesture. " +
                     "Close all fingers, stick out your thumb and point it towards yourself.");
                 Typewriter.Activate();
+                gestureOn = true;
                 gestureAnimatorStep++;
                 break;
             case 5:
@@ -189,6 +196,7 @@ public class TutorialManager : MonoBehaviour
                 Typewriter.Add("And that's the tutorial! If you ever want to revisit certain gestures, go over to the projector to cycle through them. ");
                 Typewriter.Add("Feel free to exit the tutorial room by going to the door and holding your hand on the handle.");
                 Typewriter.Activate();
+                gestureOn = false;
                 circleGuides[3].SetActive(true);
                 circleGuides[4].SetActive(true);
                 break;
@@ -214,6 +222,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 3:
+                gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 if (Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)) <= 0.75f)
                 {
                     conditionMet = true;
@@ -267,10 +276,10 @@ public class TutorialManager : MonoBehaviour
     }
     public void PoseRestrictor(string command)
     {
-        if (textGuide.activeSelf)
-        {
-            return;
-        }
+        //if (textGuide.activeSelf)
+        //{
+        //    return;
+        //}
         switch (command)
         {
             case "FOLLOW":

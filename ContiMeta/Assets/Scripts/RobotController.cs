@@ -178,6 +178,7 @@ public class RobotController : MonoBehaviour
                     if (rackOn)
                     {
                         currentState = States.MANUALPUTDOWN;
+                        Move(customDeliveryArea);
                     }
                     else
                     {
@@ -266,9 +267,9 @@ public class RobotController : MonoBehaviour
                 currentState = States.STOP;
                 break;
             case "FOLLOW":
-                gameManager.PlayerNavObstacle().enabled = false;
                 meshAgent.speed = 0.5f;
                 meshAgent.stoppingDistance = 2.0f;
+                meshAgent.autoBraking = false;
                 currentState = States.FOLLOW;
                 break;
             case "MANUALPICKUP":
@@ -310,9 +311,9 @@ public class RobotController : MonoBehaviour
     }
     private void DefaultAgentSettings()
     {
-        gameManager.PlayerNavObstacle().enabled = true;
         meshAgent.speed = 0.5f;
         meshAgent.stoppingDistance = 0;
+        meshAgent.autoBraking = true;
     }
     public void ReceivePackage(Transform package)
     {

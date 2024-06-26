@@ -26,12 +26,12 @@ public class ExitScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(transform.position, playerLeft.position) <= 0.1f || Vector3.Distance(transform.position, playerRight.position) <= 0.1f)
+        if (Vector3.Distance(transform.position, playerLeft.position) <= 0.1f || Vector3.Distance(transform.position, playerRight.position) <= 0.15f)
         {
             Debug.Log("touching exit");
             handIn = true;
         }
-        else if (Vector3.Distance(transform.position, playerLeft.position) > 0.1f || Vector3.Distance(transform.position, playerRight.position) > 0.1f)
+        else if (Vector3.Distance(transform.position, playerLeft.position) > 0.1f || Vector3.Distance(transform.position, playerRight.position) > 0.15f)
         {
             Debug.Log("not touching exit");
             handIn = false;
