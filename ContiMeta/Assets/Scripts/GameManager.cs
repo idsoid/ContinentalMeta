@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private NavMeshObstacle playerNavObstacle;
     [SerializeField]
-    private Transform playerRightHand, playerLeftHand;
+    private Transform playerRightHand, playerLeftHand, playerCenter;
     private int closestPackage;
     private int closestDeliveryArea;
     [SerializeField]
@@ -160,37 +160,42 @@ public class GameManager : MonoBehaviour
             "STATUS" => Color.blue,
             _ => Color.black,
         };
-        //switch (command[1])
-        //{
-        //    case "RIGHTPICKUP":
-        //        PackageCheck(playerRightHand, robotID);
-        //        robotList[robotID].SendCommand("MANUALPICKUP");
-        //        break;
-        //    case "LEFTPICKUP":
-        //        PackageCheck(playerLeftHand, robotID);
-        //        robotList[robotID].SendCommand("MANUALPICKUP");
-        //        break;
-        //    case "RIGHTPUTDOWN":
-        //        AreaCheck(playerRightHand, robotID);
-        //        robotList[robotID].SendCommand("MANUALPUTDOWN");
-        //        break;
-        //    case "LEFTPUTDOWN":
-        //        AreaCheck(playerLeftHand, robotID);
-        //        robotList[robotID].SendCommand("MANUALPUTDOWN");
-        //        break;
-        //    default:
-        //        robotList[robotID].SendCommand(command);
-        //        break;
-        //}
+        switch (command[1].ToUpper())
+        {
+            case "GRAB":
+                PackageCheck(playerCenter, robotID);
+                robotList[robotID].SendCommand("MANUALPICKUP");
+                break;
+            case "RELEASE":
+                PackageCheck(playerCenter, robotID);
+                robotList[robotID].SendCommand("MANUALPICKUP");
+                break;
+            default:
+                robotList[robotID].SendCommand(command[1]);
+                break;
+        }
         robotList[robotID].SendCommand(command[1].ToUpper());
     }
     public void MenuCommand (string command)
     {
-        foreach (var robot in robotList)
+        for (int i = 0; i < robotList.Count; i++)
         {
-            if (robot.PlayerSpotted())
+            if (robotList[i].PlayerSpotted())
             {
-                robot.SendCommand(command);
+                switch (command)
+                {
+                    case "PICKUP":
+                        PackageCheck(playerCenter, i);
+                        robotList[i].SendCommand("MANUALPICKUP");
+                        break;
+                    case "PUTDOWN":
+                        PackageCheck(playerCenter, i);
+                        robotList[i].SendCommand("MANUALPUTDOWN");
+                        break;
+                    default:
+                        robotList[i].SendCommand(command);
+                        break;
+                }
             }
         }
     }

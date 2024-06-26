@@ -7,6 +7,8 @@ using Oculus.Interaction.Samples;
 public class ExitScript : MonoBehaviour
 {
     [SerializeField]
+    private GameObject doorCircle;
+    [SerializeField]
     private string sceneName;
     [SerializeField]
     private SceneLoader sceneLoader;
@@ -37,12 +39,18 @@ public class ExitScript : MonoBehaviour
 
         if (handIn)
         {
+            doorCircle.SetActive(true);
             handInTimer += Time.deltaTime;
             if (handInTimer >= 1.5f)
             {
                 handIn = false;
                 sceneLoader.Load(sceneName);
             }
+        }
+        else
+        {
+            doorCircle.SetActive(false);
+            handInTimer = 0f;
         }
     }
 }

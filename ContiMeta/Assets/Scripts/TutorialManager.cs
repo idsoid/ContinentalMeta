@@ -145,7 +145,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 6:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
-                Typewriter.Add("Next, we have the Pick Up Gesture. Command the robot to Follow you again, and go to the package. " +
+                Typewriter.Add("Next, we have the Pick Up/Grab Gesture. Command the robot to Follow you again, and go to the package. " +
                     "Close your hand, with your palm still facing inwards. " +
                     "Make sure your hand is near the package.");
                 Typewriter.Activate();
@@ -155,7 +155,7 @@ public class TutorialManager : MonoBehaviour
             case 7:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 circleGuides[1].SetActive(false);
-                Typewriter.Add("Next, we have the Put Down Gesture. The robot should still Follow, so proceed to the delivery area. " +
+                Typewriter.Add("Next, we have the Put Down/Release Gesture. The robot should still Follow, so proceed to the delivery area. " +
                     "Open up your hand again, but with your palm facing inwards. " +
                     "Make sure your hand is near the delivery area");
                 Typewriter.Activate();
