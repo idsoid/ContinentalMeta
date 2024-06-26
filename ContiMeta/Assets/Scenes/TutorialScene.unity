@@ -142,7 +142,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4839811}
-  - component: {fileID: 4839812}
   m_Layer: 6
   m_Name: PlayerCenter
   m_TagString: Untagged
@@ -165,22 +164,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1004170998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &4839812
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4839810}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.5, y: 1, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &15450500
 GameObject:
   m_ObjectHideFlags: 0
@@ -20108,6 +20091,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2483171112401766338, guid: f54012181eacade4ea242c65f804720f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1996339979}
+    - targetCorrespondingSourceObject: {fileID: 2483171112401766338, guid: f54012181eacade4ea242c65f804720f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1996339984}
     - targetCorrespondingSourceObject: {fileID: 1248127056091543881, guid: f54012181eacade4ea242c65f804720f, type: 3}
       insertIndex: 2
       addedObject: {fileID: 1004171012}
@@ -25497,7 +25483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   robotFOV: {fileID: 301605716}
-  playerNavObstacle: {fileID: 4839812}
+  playerNavObstacle: {fileID: 1996339984}
   playerRightHand: {fileID: 1004171004}
   playerLeftHand: {fileID: 1004170997}
   playerCenter: {fileID: 4839811}
@@ -33670,6 +33656,22 @@ MonoBehaviour:
   playerCenter: {fileID: 4839811}
   canvasCommandPopupController: {fileID: 1745664689}
   canvasCommandPopupHand: {fileID: 1955665706}
+--- !u!208 &1996339984
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004171000}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2010606877
 GameObject:
   m_ObjectHideFlags: 0

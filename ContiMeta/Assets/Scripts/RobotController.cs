@@ -267,6 +267,7 @@ public class RobotController : MonoBehaviour
                 currentState = States.STOP;
                 break;
             case "FOLLOW":
+                gameManager.PlayerNavObstacle().enabled = false;
                 meshAgent.speed = 0.5f;
                 meshAgent.stoppingDistance = 2.0f;
                 meshAgent.autoBraking = false;
@@ -274,12 +275,12 @@ public class RobotController : MonoBehaviour
                 break;
             case "MANUALPICKUP":
                 DefaultAgentSettings();
-                NearestPoint(customPackage);
+                StartCoroutine(NearestPoint(customPackage));
                 currentState = States.MANUALGOTO;
                 break;
             case "MANUALPUTDOWN":
                 DefaultAgentSettings();
-                NearestPoint(customDeliveryArea);
+                StartCoroutine(NearestPoint(customDeliveryArea));
                 currentState = States.MANUALGOTO;
                 break;
             case "STATUS":
@@ -311,6 +312,7 @@ public class RobotController : MonoBehaviour
     }
     private void DefaultAgentSettings()
     {
+        gameManager.PlayerNavObstacle().enabled = true;
         meshAgent.speed = 0.5f;
         meshAgent.stoppingDistance = 0;
         meshAgent.autoBraking = true;
@@ -337,8 +339,12 @@ public class RobotController : MonoBehaviour
         yield return new WaitForSecondsRealtime(10f);
         rackAreaObj.SetActive(true);
     }
-    private void NearestPoint(Transform mainItem)
+    private IEnumerator NearestPoint(Transform mainItem)
     {
+        while (!gameManager.PlayerNavObstacle().enabled)
+        {
+            yield return new WaitForEndOfFrame();
+        }
         NavMeshPath path = new();
         int pointCount = 0;
         List<int> invalidPoints = new();
@@ -363,7 +369,7 @@ public class RobotController : MonoBehaviour
         if (invalidPoints.Count == pointCount)
         {
             Debug.Log("invalid points on item");
-            return;
+            yield break;
         }
 
         for (int i = 0; i < mainItem.transform.childCount; i++)
