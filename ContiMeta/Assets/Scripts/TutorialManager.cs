@@ -214,7 +214,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 3:
-                if (Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)) <= 1f)
+                if (Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(robotSpot.position.x, robotSpot.position.z)) <= 0.75f)
                 {
                     conditionMet = true;
                 }
