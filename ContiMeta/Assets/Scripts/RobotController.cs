@@ -48,7 +48,6 @@ public class RobotController : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         meshAgent = GetComponent<NavMeshAgent>();
-        meshAgent.stoppingDistance = 0;
         if (rackOn)
         {
             Move(deliverypoint);
@@ -63,6 +62,7 @@ public class RobotController : MonoBehaviour
     {
         //Debug.Log(meshAgent.pathStatus);
         Debug.Log(currentState);
+        Debug.Log("distance: " + Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(player.position.x, player.position.z)));
     }
     void FixedUpdate()
     {
@@ -159,8 +159,9 @@ public class RobotController : MonoBehaviour
                 meshAgent.speed = 0;
                 break;
             case States.FOLLOW:
+                Debug.Log("follow path status: " + meshAgent.pathStatus);
                 //Path blocked
-                if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial)
+                if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial || meshAgent.pathStatus == NavMeshPathStatus.PathInvalid)
                 {
                     previousState = currentState;
                     currentState = States.STUCK;
@@ -169,6 +170,13 @@ public class RobotController : MonoBehaviour
                 else
                 {
                     Move(player);
+                    if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                    {
+                        Vector3 lookPos = player.position - transform.position;
+                        lookPos.y = 0;
+                        Quaternion rotation = Quaternion.LookRotation(lookPos);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime);
+                    }
                 }
                 break;
             case States.MANUALGOTO:
@@ -225,6 +233,7 @@ public class RobotController : MonoBehaviour
                 Move(goToPoint);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
+                    customPackage.GetComponent<NavMeshObstacle>().enabled = true;
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
                     gameManager.PlayerNavObstacle().enabled = false;
@@ -269,18 +278,18 @@ public class RobotController : MonoBehaviour
             case "FOLLOW":
                 gameManager.PlayerNavObstacle().enabled = false;
                 meshAgent.speed = 0.5f;
-                meshAgent.stoppingDistance = 2.0f;
+                meshAgent.stoppingDistance = 1.5f;
                 meshAgent.autoBraking = false;
                 currentState = States.FOLLOW;
                 break;
             case "MANUALPICKUP":
                 DefaultAgentSettings();
-                StartCoroutine(NearestPoint(customPackage));
+                NearestPoint(customPackage);
                 currentState = States.MANUALGOTO;
                 break;
             case "MANUALPUTDOWN":
                 DefaultAgentSettings();
-                StartCoroutine(NearestPoint(customDeliveryArea));
+                NearestPoint(customDeliveryArea);
                 currentState = States.MANUALGOTO;
                 break;
             case "STATUS":
@@ -339,12 +348,8 @@ public class RobotController : MonoBehaviour
         yield return new WaitForSecondsRealtime(10f);
         rackAreaObj.SetActive(true);
     }
-    private IEnumerator NearestPoint(Transform mainItem)
+    private void NearestPoint(Transform mainItem)
     {
-        while (!gameManager.PlayerNavObstacle().enabled)
-        {
-            yield return new WaitForEndOfFrame();
-        }
         NavMeshPath path = new();
         int pointCount = 0;
         List<int> invalidPoints = new();
@@ -357,9 +362,10 @@ public class RobotController : MonoBehaviour
             pointCount++;
 
             Vector3 pointPos = mainItem.transform.GetChild(i).position;
+            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 1.0f, 1 << 6);
             NavMesh.CalculatePath(meshAgent.nextPosition, pointPos, NavMesh.AllAreas, path);
             Debug.Log(path.status);
-            if (path.status == NavMeshPathStatus.PathInvalid)
+            if (path.status == NavMeshPathStatus.PathInvalid || path.status == NavMeshPathStatus.PathPartial || pointColliders.Length > 0)
             {
                 Debug.Log("invalid: " + i);
                 invalidPoints.Add(i);
@@ -369,7 +375,7 @@ public class RobotController : MonoBehaviour
         if (invalidPoints.Count == pointCount)
         {
             Debug.Log("invalid points on item");
-            yield break;
+            return;
         }
 
         for (int i = 0; i < mainItem.transform.childCount; i++)

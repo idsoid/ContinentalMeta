@@ -6,14 +6,14 @@ using UnityEngine.AI;
 public class FieldOfView : MonoBehaviour
 {
     public float radius, angle;
-    public LayerMask targetMask, obstructionMask;
+    public LayerMask targetMask, obstructionMask, forkliftMask;
     private IEnumerator coroutine;
-    public bool playerInRange, playerSpotted;
+    public bool playerInRange, playerSpotted, forkliftSpotted;
 
     [SerializeField]
     private MeshFilter meshFilter;
     private Mesh visionConeMesh;
-    public int visionConeResolution = 120;//the vision cone will be made up of triangles, the higher this value is the pretier the vision cone will be
+    public int visionConeResolution = 120;//the vision cone will be made up of triangles, the higher this value is the prettier the vision cone will be
 
     void Start()
     {
@@ -42,14 +42,6 @@ public class FieldOfView : MonoBehaviour
             Sine = Mathf.Sin(Currentangle);
             Cosine = Mathf.Cos(Currentangle);
             Vector3 VertForward = (Vector3.forward * Cosine) + (Vector3.right * Sine);
-            //if (Physics.Raycast(transform.position, RaycastDirection, out RaycastHit hit, radius * 3.75f))
-            //{
-            //    Vertices[i + 1] = VertForward * hit.distance;
-            //}
-            //else
-            //{
-            //    Vertices[i + 1] = VertForward * radius * 3.75f;
-            //}
             Vertices[i + 1] = VertForward * radius * 3.33f;
 
 
