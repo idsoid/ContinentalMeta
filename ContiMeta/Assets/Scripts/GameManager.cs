@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField]
-    private GameObject robotFOV;
+    private List<GameObject> robotFOV;
     [SerializeField]
     private NavMeshObstacle playerNavObstacle;
     [SerializeField]
@@ -94,7 +94,10 @@ public class GameManager : MonoBehaviour
     }
     public void ToggleRobotFOV()
     {
-        robotFOV.SetActive(!robotFOV.activeSelf);
+        foreach (var fov in robotFOV)
+        {
+            fov.SetActive(!fov.activeSelf);
+        }
     }
     public bool GetMenuActive()
     {

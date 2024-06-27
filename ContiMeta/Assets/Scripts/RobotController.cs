@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
-
+//Vector3(-22.2093601,-2.8829999,-17.9200001)
 public class RobotController : MonoBehaviour
 {
     private GameManager gameManager;
@@ -61,8 +61,8 @@ public class RobotController : MonoBehaviour
     void Update()
     {
         //Debug.Log(meshAgent.pathStatus);
-        Debug.Log(currentState);
-        Debug.Log("distance: " + Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(player.position.x, player.position.z)));
+        //Debug.Log(currentState);
+        //Debug.Log("distance: " + Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(player.position.x, player.position.z)));
     }
     void FixedUpdate()
     {
@@ -362,17 +362,20 @@ public class RobotController : MonoBehaviour
             pointCount++;
 
             Vector3 pointPos = mainItem.transform.GetChild(i).position;
-            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 1.0f, 1 << 6);
-            NavMesh.CalculatePath(meshAgent.nextPosition, pointPos, NavMesh.AllAreas, path);
-            Debug.Log(path.status);
-            if (path.status == NavMeshPathStatus.PathInvalid || path.status == NavMeshPathStatus.PathPartial || pointColliders.Length > 0)
+            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 1.25f, 1 << 6);
+            NavMesh.CalculatePath(meshAgent.transform.position, pointPos, NavMesh.AllAreas, path);
+            Debug.Log(mainItem.transform.GetChild(i).name + " path status: " + path.status);
+            NavMeshAgent agent = meshAgent;
+            agent.SetDestination(mainItem.transform.GetChild(i).position);
+            Debug.Log("point distance: " + agent.remainingDistance);
+            if (path.status == NavMeshPathStatus.PathInvalid || path.status == NavMeshPathStatus.PathPartial || pointColliders.Length > 0 || agent.remainingDistance >= 2.0f)
             {
-                Debug.Log("invalid: " + i);
+                Debug.Log("invalid: " + mainItem.transform.GetChild(i).name);
                 invalidPoints.Add(i);
             }
         }
-
-        if (invalidPoints.Count == pointCount)
+        Debug.Log("points: " + pointCount);
+        if (invalidPoints.Count >= pointCount)
         {
             Debug.Log("invalid points on item");
             return;
