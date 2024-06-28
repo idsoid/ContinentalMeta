@@ -221,8 +221,6 @@ public class RobotController : MonoBehaviour
                     {
                         rackOn = false;
                         customPackage.SetParent(null);
-                        Destroy(customPackage.gameObject, 15f);
-                        customPackage = null;
                         currentState = States.MANUALBACKUP;
                         meshAgent.updateRotation = false;
                         Move(goToPoint);
@@ -234,6 +232,8 @@ public class RobotController : MonoBehaviour
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     customPackage.GetComponent<NavMeshObstacle>().enabled = true;
+                    Destroy(customPackage.gameObject, 15f);
+                    customPackage = null;
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
                     gameManager.PlayerNavObstacle().enabled = false;
@@ -284,13 +284,11 @@ public class RobotController : MonoBehaviour
                 break;
             case "MANUALPICKUP":
                 DefaultAgentSettings();
-                NearestPoint(customPackage);
-                currentState = States.MANUALGOTO;
+                StartCoroutine(NearestPoint(customPackage));
                 break;
             case "MANUALPUTDOWN":
                 DefaultAgentSettings();
-                NearestPoint(customDeliveryArea);
-                currentState = States.MANUALGOTO;
+                StartCoroutine(NearestPoint(customDeliveryArea));
                 break;
             case "STATUS":
                 StartCoroutine(StatusCheck());
@@ -348,11 +346,11 @@ public class RobotController : MonoBehaviour
         yield return new WaitForSecondsRealtime(10f);
         rackAreaObj.SetActive(true);
     }
-    private void NearestPoint(Transform mainItem)
+    private IEnumerator NearestPoint(Transform mainItem)
     {
-        NavMeshPath path = new();
         int pointCount = 0;
         List<int> invalidPoints = new();
+        float distance = 0f;
         for (int i = 0; i < mainItem.transform.childCount; i++)
         {
             if (!mainItem.transform.GetChild(i).CompareTag("Point"))
@@ -362,23 +360,48 @@ public class RobotController : MonoBehaviour
             pointCount++;
 
             Vector3 pointPos = mainItem.transform.GetChild(i).position;
-            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 1.25f, 1 << 6);
-            NavMesh.CalculatePath(meshAgent.transform.position, pointPos, NavMesh.AllAreas, path);
-            Debug.Log(mainItem.transform.GetChild(i).name + " path status: " + path.status);
-            NavMeshAgent agent = meshAgent;
-            agent.SetDestination(mainItem.transform.GetChild(i).position);
-            Debug.Log("point distance: " + agent.remainingDistance);
-            if (path.status == NavMeshPathStatus.PathInvalid || path.status == NavMeshPathStatus.PathPartial || pointColliders.Length > 0 || agent.remainingDistance >= 2.0f)
+            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 0.25f, 1 << 6);
+            Debug.Log(mainItem.transform.GetChild(i).name + ": player too close");
+            if (NavMesh.SamplePosition(pointPos, out NavMeshHit hit, 0.25f, NavMesh.AllAreas))
+            {
+                meshAgent.SetDestination(hit.position);
+            }
+            else
+            {
+                Debug.Log("invalid: " + mainItem.transform.GetChild(i).name);
+                invalidPoints.Add(i);
+                continue;
+            }
+
+            yield return new WaitUntil(() => !meshAgent.pathPending);
+            if (meshAgent.path.corners.Length != 0)
+            {
+                for (int j = 0; j < meshAgent.path.corners.Length - 1; j++)
+                {
+                    distance += Vector3.Distance(meshAgent.path.corners[j], meshAgent.path.corners[j + 1]);
+                }
+            }
+            else
+            {
+                distance = 100f;
+            }
+            Debug.Log(mainItem.transform.GetChild(i).name + " distance: " + distance);
+
+            if (pointColliders.Length > 0 || distance >= 5.0f)
             {
                 Debug.Log("invalid: " + mainItem.transform.GetChild(i).name);
                 invalidPoints.Add(i);
             }
         }
-        Debug.Log("points: " + pointCount);
         if (invalidPoints.Count >= pointCount)
         {
             Debug.Log("invalid points on item");
-            return;
+            gameManager.PlayerNavObstacle().enabled = false;
+            meshAgent.speed = 0.5f;
+            meshAgent.stoppingDistance = 1.5f;
+            meshAgent.autoBraking = false;
+            currentState = States.FOLLOW;
+            yield break;
         }
 
         for (int i = 0; i < mainItem.transform.childCount; i++)
@@ -401,6 +424,7 @@ public class RobotController : MonoBehaviour
             }
         }
         goToPoint = mainItem.transform.GetChild(rackNearestPoint);
+        currentState = States.MANUALGOTO;
     }
     private IEnumerator StatusCheck()
     {
