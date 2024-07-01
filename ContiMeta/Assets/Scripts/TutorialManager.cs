@@ -276,10 +276,10 @@ public class TutorialManager : MonoBehaviour
     }
     public void PoseRestrictor(string command)
     {
-        //if (textGuide.activeSelf)
-        //{
-        //    return;
-        //}
+        if (textGuide.activeSelf)
+        {
+            return;
+        }
         switch (command)
         {
             case "FOLLOW":

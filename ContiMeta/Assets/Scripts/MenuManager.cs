@@ -8,13 +8,13 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField]
     private VideoPlayer vidPlayer;
-    private float vidDuration = 5.5f;
-    private bool vidDone;
+    public bool vidDone = false;
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(LoadInBackground());
+        StartCoroutine(LoadAfterVid());
     }
 
     // Update is called once per frame
@@ -25,8 +25,8 @@ public class MenuManager : MonoBehaviour
 
     private IEnumerator LoadAfterVid()
     {
-        yield return new WaitForSecondsRealtime(vidDuration);
-            
+        yield return new WaitUntil(() => vidPlayer.frame == (long)vidPlayer.frameCount - 1);
+        vidDone = true;    
     }
     private IEnumerator LoadInBackground()
     {

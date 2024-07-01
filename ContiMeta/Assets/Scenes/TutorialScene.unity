@@ -7451,7 +7451,7 @@ MonoBehaviour:
   - {fileID: 525140903}
   - {fileID: 1763450982}
   - {fileID: 180971993}
-  tutorialStep: 99
+  tutorialStep: 0
   player: {fileID: 4839811}
   robotSpot: {fileID: 1174434880}
   textGuide: {fileID: 321522299}

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
-//Vector3(-22.2093601,-2.8829999,-17.9200001)
 public class RobotController : MonoBehaviour
 {
     private GameManager gameManager;
@@ -67,10 +66,10 @@ public class RobotController : MonoBehaviour
     void FixedUpdate()
     {
         //Update player saved position when changed
-        FSM();
+        StartCoroutine(FSM());
     }
 
-    private void FSM()
+    private IEnumerator FSM()
     {
         switch (currentState)
         {
@@ -83,6 +82,7 @@ public class RobotController : MonoBehaviour
                 {
                     Move(rackPoint);
                 }
+                yield return new WaitUntil(() => !meshAgent.pathPending);
 
                 //Check if near/at destination
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
@@ -113,6 +113,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.PICKUP:
                 Move(rackArea);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     animator.SetInteger("LiftPhase", 1);
@@ -130,6 +131,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.PUTDOWN:
                 Move(deliveryArea);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     animator.SetInteger("LiftPhase", 0);
@@ -148,6 +150,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.BACKUP:
                 Move(deliverypoint);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     currentState = States.DELIVER;
@@ -170,6 +173,7 @@ public class RobotController : MonoBehaviour
                 else
                 {
                     Move(player);
+                    yield return new WaitUntil(() => !meshAgent.pathPending);
                     if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                     {
                         Vector3 lookPos = player.position - transform.position;
@@ -181,6 +185,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALGOTO:
                 Move(goToPoint);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     if (rackOn)
@@ -198,6 +203,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALPICKUP:
                 Move(customPackage);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     animator.SetInteger("LiftPhase", 1);
@@ -205,7 +211,7 @@ public class RobotController : MonoBehaviour
                     {
                         rackOn = true;
                         customPackage.SetParent(transform);
-                        gameManager.PlayerNavObstacle().enabled = false;
+                        gameManager.PlayerNavObstacle().enabled = true;
                         meshAgent.stoppingDistance = 2.0f;
                         currentState = States.FOLLOW;
                         Move(player);
@@ -214,6 +220,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALPUTDOWN:
                 Move(customDeliveryArea);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     animator.SetInteger("LiftPhase", 0);
@@ -229,6 +236,7 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALBACKUP:
                 Move(goToPoint);
+                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     customPackage.GetComponent<NavMeshObstacle>().enabled = true;
@@ -236,7 +244,7 @@ public class RobotController : MonoBehaviour
                     customPackage = null;
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
-                    gameManager.PlayerNavObstacle().enabled = false;
+                    gameManager.PlayerNavObstacle().enabled = true;
                     meshAgent.stoppingDistance = 2.0f;
                     Move(player);
                 }
