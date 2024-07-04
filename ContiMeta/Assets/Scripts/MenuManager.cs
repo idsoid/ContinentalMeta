@@ -11,40 +11,40 @@ public class MenuManager : MonoBehaviour
     private ToggleGroup toggleGroup;
     [SerializeField]
     private VideoPlayer firstVid, recurringVid;
-    public bool vidDone = false;
+    private bool startVid = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoadInBackground());
+        //StartCoroutine(LoadInBackground());
         //StartCoroutine(LoadAfterVid());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        if (startVid)
+        {
 
-    private IEnumerator LoadAfterVid(VideoPlayer vidPlayer)
-    {
-        yield return new WaitUntil(() => vidPlayer.frame == (long)vidPlayer.frameCount - 1);
-        vidDone = true;    
+        }
     }
-    private IEnumerator LoadInBackground()
+    
+    private IEnumerator LoadInBackground(VideoPlayer vidPlayer)
     {
         yield return null;
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("TutorialScene");
         asyncOperation.allowSceneActivation = false;
         while (!asyncOperation.isDone)
         {
-            if (asyncOperation.progress >= 0.9f && vidDone)
+            if (asyncOperation.progress >= 0.9f && (vidPlayer.frame == (long)vidPlayer.frameCount - 1))
             {
+                yield return new WaitForSecondsRealtime(1.0f);
                 asyncOperation.allowSceneActivation = true;
             }
+            yield return null;
         }
     }
-
+    
     public void PlayerType()
     {
         foreach (var toggle in toggleGroup.ActiveToggles())
@@ -53,15 +53,20 @@ public class MenuManager : MonoBehaviour
             {
                 if (toggle.name == "First-Time")
                 {
+                    PlayerPrefs.SetString("player", "first");
+                    PlayerPrefs.Save();
                     firstVid.Play();
-                    StartCoroutine(LoadAfterVid(firstVid));
+                    StartCoroutine(LoadInBackground(firstVid));
+                    break;
                 }
                 else
                 {
+                    PlayerPrefs.SetString("player", "recurring");
+                    PlayerPrefs.Save();
                     recurringVid.Play();
-                    StartCoroutine(LoadAfterVid(recurringVid));
+                    StartCoroutine(LoadInBackground(recurringVid));
+                    break;
                 }
-                break;
             }
         }
     }

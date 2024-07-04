@@ -239,9 +239,12 @@ public class RobotController : MonoBehaviour
                 yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
-                    customPackage.GetComponent<NavMeshObstacle>().enabled = true;
-                    Destroy(customPackage.gameObject, 15f);
-                    customPackage = null;
+                    if (customPackage != null)
+                    {
+                        customPackage.GetComponent<NavMeshObstacle>().enabled = true;
+                        Destroy(customPackage.gameObject, 15f);
+                        customPackage = null;
+                    }
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
                     gameManager.PlayerNavObstacle().enabled = true;
@@ -285,7 +288,7 @@ public class RobotController : MonoBehaviour
                 break;
             case "FOLLOW":
                 gameManager.PlayerNavObstacle().enabled = false;
-                meshAgent.speed = 0.5f;
+                meshAgent.speed = 1f;
                 meshAgent.stoppingDistance = 1.5f;
                 meshAgent.autoBraking = false;
                 currentState = States.FOLLOW;
@@ -328,7 +331,7 @@ public class RobotController : MonoBehaviour
     private void DefaultAgentSettings()
     {
         gameManager.PlayerNavObstacle().enabled = true;
-        meshAgent.speed = 0.5f;
+        meshAgent.speed = 1f;
         meshAgent.stoppingDistance = 0;
         meshAgent.autoBraking = true;
     }

@@ -30,10 +30,19 @@ public class TutorialManager : MonoBehaviour
         robotFOV.SetActive(false);
         oldRotY = player.eulerAngles.y;
         oldPos = new Vector2(player.position.x, player.position.z);
-        Typewriter.Add("Hello! Welcome to the AMR VR Project!");
-        Typewriter.Add("Let's walk through the gestures and commands, shall we? Make sure to tap these boxes away after you are done reading them.");
-        Typewriter.Add("We will start off with the Player Gestures!");
-        Typewriter.Activate();
+
+        if (PlayerPrefs.GetString("player") == "first")
+        {
+            Typewriter.Add("Hello! Welcome to the AMR VR Project!");
+            Typewriter.Add("Let's walk through the gestures and commands, shall we? Make sure to tap these boxes away after you are done reading them.");
+            Typewriter.Add("We will start off with the Player Gestures!");
+            Typewriter.Activate();
+        }
+        else
+        {
+            tutorialStep = 99;
+            textGuide.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -145,21 +154,14 @@ public class TutorialManager : MonoBehaviour
                 break;
             case 5:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
-                Typewriter.Add("Next, we have the Stop Gesture. " +
-                    "Open up your hand, with your palm facing the robot.");
-                Typewriter.Activate();
-                gestureAnimatorStep++;
-                break;
-            case 6:
-                gestureAnimatorList[gestureAnimatorStep].SetActive(false);
-                Typewriter.Add("Next, we have the Pick Up/Grab Gesture. Command the robot to Follow you again, and go to the package. " +
+                Typewriter.Add("Next, we have the Pick Up/Grab Gesture. Go to the package. " +
                     "Close your hand, with your palm still facing inwards. " +
                     "Make sure your hand is near the package.");
                 Typewriter.Activate();
                 circleGuides[1].SetActive(true);
                 gestureAnimatorStep++;
                 break;
-            case 7:
+            case 6:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 circleGuides[1].SetActive(false);
                 Typewriter.Add("Next, we have the Put Down/Release Gesture. The robot should still Follow, so proceed to the delivery area. " +
@@ -169,9 +171,16 @@ public class TutorialManager : MonoBehaviour
                 circleGuides[2].SetActive(true);
                 gestureAnimatorStep++;
                 break;
-            case 8:
+            case 7:
                 gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 circleGuides[2].SetActive(false);
+                Typewriter.Add("Next, we have the Stop Gesture. " +
+                    "Open up your hand, with your palm facing the robot.");
+                Typewriter.Activate();
+                gestureAnimatorStep++;
+                break;
+            case 8:
+                gestureAnimatorList[gestureAnimatorStep].SetActive(false);
                 Typewriter.Add("Next, we have the Status Gesture. " +
                     "A simple thumbs up facing the robot.");
                 Typewriter.Activate();
@@ -235,19 +244,19 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case 5:
-                if (robot.StoreCommand == "STOP")
-                {
-                    conditionMet = true;
-                }
-                break;
-            case 6:
                 if (robot.StoreCommand.Contains("PICKUP"))
                 {
                     conditionMet = true;
                 }
                 break;
-            case 7:
+            case 6:
                 if (robot.StoreCommand.Contains("PUTDOWN"))
+                {
+                    conditionMet = true;
+                }
+                break;
+            case 7:
+                if (robot.StoreCommand == "STOP")
                 {
                     conditionMet = true;
                 }
@@ -276,7 +285,7 @@ public class TutorialManager : MonoBehaviour
     }
     public void PoseRestrictor(string command)
     {
-        if (textGuide.activeSelf)
+        if (textGuide.activeSelf && PlayerPrefs.GetString("player") == "first")
         {
             return;
         }
@@ -288,31 +297,31 @@ public class TutorialManager : MonoBehaviour
                     GameManager.Instance.PlayerPoseDetection(command);
                 }
                 break;
-            case "STOP":
+            case "RIGHTPICKUP":
                 if (tutorialStep >= 5)
                 {
                     GameManager.Instance.PlayerPoseDetection(command);
                 }
                 break;
-            case "RIGHTPICKUP":
-                if (tutorialStep >= 6)
-                {
-                    GameManager.Instance.PlayerPoseDetection(command);
-                }
-                break;
             case "LEFTPICKUP":
-                if (tutorialStep >= 6)
+                if (tutorialStep >= 5)
                 {
                     GameManager.Instance.PlayerPoseDetection(command);
                 }
                 break;
             case "RIGHTPUTDOWN":
-                if (tutorialStep >= 7)
+                if (tutorialStep >= 6)
                 {
                     GameManager.Instance.PlayerPoseDetection(command);
                 }
                 break;
             case "LEFTPUTDOWN":
+                if (tutorialStep >= 6)
+                {
+                    GameManager.Instance.PlayerPoseDetection(command);
+                }
+                break;
+            case "STOP":
                 if (tutorialStep >= 7)
                 {
                     GameManager.Instance.PlayerPoseDetection(command);
