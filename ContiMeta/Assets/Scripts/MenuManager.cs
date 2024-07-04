@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
     [SerializeField]
-    private VideoPlayer vidPlayer;
+    private ToggleGroup toggleGroup;
+    [SerializeField]
+    private VideoPlayer firstVid, recurringVid;
     public bool vidDone = false;
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(LoadInBackground());
-        StartCoroutine(LoadAfterVid());
+        //StartCoroutine(LoadAfterVid());
     }
 
     // Update is called once per frame
@@ -23,7 +26,7 @@ public class MenuManager : MonoBehaviour
         
     }
 
-    private IEnumerator LoadAfterVid()
+    private IEnumerator LoadAfterVid(VideoPlayer vidPlayer)
     {
         yield return new WaitUntil(() => vidPlayer.frame == (long)vidPlayer.frameCount - 1);
         vidDone = true;    
@@ -39,8 +42,27 @@ public class MenuManager : MonoBehaviour
             {
                 asyncOperation.allowSceneActivation = true;
             }
+        }
+    }
 
-            yield return null;
+    public void PlayerType()
+    {
+        foreach (var toggle in toggleGroup.ActiveToggles())
+        {
+            if (toggle.isOn)
+            {
+                if (toggle.name == "First-Time")
+                {
+                    firstVid.Play();
+                    StartCoroutine(LoadAfterVid(firstVid));
+                }
+                else
+                {
+                    recurringVid.Play();
+                    StartCoroutine(LoadAfterVid(recurringVid));
+                }
+                break;
+            }
         }
     }
 }
