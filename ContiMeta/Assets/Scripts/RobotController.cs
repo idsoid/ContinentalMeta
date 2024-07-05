@@ -59,13 +59,10 @@ public class RobotController : MonoBehaviour
     }
     void Update()
     {
-        //Debug.Log(meshAgent.pathStatus);
-        //Debug.Log(currentState);
-        //Debug.Log("distance: " + Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(player.position.x, player.position.z)));
+        
     }
     void FixedUpdate()
     {
-        //Update player saved position when changed
         StartCoroutine(FSM());
     }
 
