@@ -97,17 +97,17 @@ public class GameManager : MonoBehaviour
     }
     public void MenuPanel(int num)
     {
-        menuPanels[num].SetActive(false);
+        menuPanels[menuPanel].SetActive(false);
         menuPanel += num;
-        if (num >= menuPanels.Count - 1)
+        if (menuPanel > menuPanels.Count - 1)
         {
-            num = 0;
+            menuPanel = 0;
         }
-        else if (num <= 0)
+        else if (menuPanel < 0)
         {
-            num = menuPanels.Count - 1;
+            menuPanel = menuPanels.Count - 1;
         }
-        menuPanels[num].SetActive(true);
+        menuPanels[menuPanel].SetActive(true);
     }
     public void ToggleRobotFOV()
     {

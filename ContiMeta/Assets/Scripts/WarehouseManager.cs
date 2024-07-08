@@ -5,9 +5,13 @@ using UnityEngine;
 public class WarehouseManager : MonoBehaviour
 {
     //tasks: 
+    //activate robot 1 with a command
     //place all misplaced packages at a delivery area 0/6
     //check robots status 0/4
-    //free robot 2 from being stuck
+    //command each robot to follow 0/4
+    //stop 2 robots 0/2
+    //free robot 3 from being stuck
+    //
 
     [SerializeField]
     private List<GameObject> robotCheck;
@@ -15,7 +19,8 @@ public class WarehouseManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Typewriter.Add("Check your menu command for your Tasklist! Press the left/right arrows to cycle through the panels. Good luck! :)");
+        Typewriter.Activate();
     }
 
     // Update is called once per frame
