@@ -23,12 +23,9 @@ public class MenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (startVid)
-        {
-
-        }
+        //-2.5 150 110
     }
-    
+
     private IEnumerator LoadInBackground(VideoPlayer vidPlayer)
     {
         yield return null;

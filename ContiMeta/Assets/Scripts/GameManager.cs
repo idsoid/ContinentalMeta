@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
     public List<bool> startTimer;
     public string currentPose;
     public bool menuActive = false;
+    [SerializeField]
+    private List<GameObject> menuPanels;
+    public int menuPanel = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -92,6 +95,20 @@ public class GameManager : MonoBehaviour
     {
         menuActive = !menuActive;
     }
+    public void MenuPanel(int num)
+    {
+        menuPanels[num].SetActive(false);
+        menuPanel += num;
+        if (num >= menuPanels.Count - 1)
+        {
+            num = 0;
+        }
+        else if (num <= 0)
+        {
+            num = menuPanels.Count - 1;
+        }
+        menuPanels[num].SetActive(true);
+    }
     public void ToggleRobotFOV()
     {
         foreach (var fov in robotFOV)
@@ -105,6 +122,11 @@ public class GameManager : MonoBehaviour
     }
     public void PoseCommand(int robotID, string command)
     {
+        if (menuActive)
+        {
+            return;
+        }
+
         meshRenderers[robotID].material.color = command switch
         {
             "GO" => Color.green,

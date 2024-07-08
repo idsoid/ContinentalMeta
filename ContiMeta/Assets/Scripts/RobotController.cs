@@ -34,7 +34,8 @@ public class RobotController : MonoBehaviour
         STUCK,
     }
     public States currentState;
-    private States previousState;
+    public States previousState;
+    private Vector3 lastTarget;
     private NavMeshAgent meshAgent;
     [SerializeField]
     private Animator animator;
@@ -59,7 +60,7 @@ public class RobotController : MonoBehaviour
     }
     void Update()
     {
-        
+        Debug.Log("pathstatus: " + meshAgent.pathStatus);
     }
     void FixedUpdate()
     {
@@ -85,11 +86,19 @@ public class RobotController : MonoBehaviour
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
                     //Path blocked
-                    if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial)
+                    if (meshAgent.pathStatus == NavMeshPathStatus.PathPartial || meshAgent.pathStatus == NavMeshPathStatus.PathInvalid)
                     {
                         previousState = currentState;
                         currentState = States.STUCK;
                         meshAgent.speed = 0;
+                        if (rackOn)
+                        {
+                            lastTarget = deliverypoint.position;
+                        }
+                        else
+                        {
+                            lastTarget = rackPoint.position;
+                        }
                     }
                     //Continue path
                     else
@@ -134,9 +143,12 @@ public class RobotController : MonoBehaviour
                     animator.SetInteger("LiftPhase", 0);
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
                     {
-                        rackOn = false;
-                        deliveryAreaObj.transform.rotation = rackObj.transform.rotation;
-                        Destroy(rackObj);
+                        if (rackObj != null)
+                        {
+                            rackOn = false;
+                            deliveryAreaObj.transform.rotation = rackObj.transform.rotation;
+                            Destroy(rackObj);
+                        }
                         StartCoroutine(DisableDelivery());
                         deliveryAreaObj.SetActive(true);
                         currentState = States.BACKUP;
@@ -250,11 +262,13 @@ public class RobotController : MonoBehaviour
                 }
                 break;
             case States.STUCK:
+                meshAgent.SetDestination(lastTarget);
                 //Check if path is free
                 if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
                 {
                     currentState = previousState;
                     meshAgent.speed = 0.5f;
+                    meshAgent.SetDestination(lastTarget);
                 }
                 break;
             default:
@@ -328,7 +342,7 @@ public class RobotController : MonoBehaviour
     private void DefaultAgentSettings()
     {
         gameManager.PlayerNavObstacle().enabled = true;
-        meshAgent.speed = 1f;
+        meshAgent.speed = 0.5f;
         meshAgent.stoppingDistance = 0;
         meshAgent.autoBraking = true;
     }

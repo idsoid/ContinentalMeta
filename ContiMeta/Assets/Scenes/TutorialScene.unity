@@ -30447,6 +30447,8 @@ MonoBehaviour:
   startTimer: 
   currentPose: 
   menuActive: 0
+  menuPanels: []
+  menuPanel: 1
 --- !u!4 &1410940200
 Transform:
   m_ObjectHideFlags: 0
@@ -49020,6 +49022,10 @@ PrefabInstance:
     - target: {fileID: 6049769502891080575, guid: c66c1efbfd5988f4c9211b5eb1836843, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: PICKUP
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139701725370267329, guid: c66c1efbfd5988f4c9211b5eb1836843, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7266510362708410191, guid: c66c1efbfd5988f4c9211b5eb1836843, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
