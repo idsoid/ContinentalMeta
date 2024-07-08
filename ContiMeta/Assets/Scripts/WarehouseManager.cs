@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class WarehouseManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class WarehouseManager : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> robotCheck;
+    [SerializeField]
+    private List<TMP_Text> tasklistTexts;
 
     // Start is called before the first frame update
     void Start()
