@@ -11,7 +11,6 @@ public class MenuManager : MonoBehaviour
     private ToggleGroup toggleGroup;
     [SerializeField]
     private VideoPlayer firstVid, recurringVid;
-    private bool startVid = false;
 
     // Start is called before the first frame update
     void Start()

@@ -7,7 +7,7 @@ TagManager:
   - SamplesInfoPanel
   - Point
   - Exit
-  - Forklift
+  - Delivered
   layers:
   - Default
   - TransparentFX

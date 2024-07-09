@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     public bool menuActive = false;
     [SerializeField]
     private List<GameObject> menuPanels;
-    public int menuPanel = 1;
+    public int menuPanel = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -122,10 +122,10 @@ public class GameManager : MonoBehaviour
     }
     public void PoseCommand(int robotID, string command)
     {
-        if (menuActive)
-        {
-            return;
-        }
+        //if (menuActive)
+        //{
+        //    return;
+        //}
 
         meshRenderers[robotID].material.color = command switch
         {

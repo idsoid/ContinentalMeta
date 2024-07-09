@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
-        playerCenter.position = new Vector3(transform.position.x, 0, transform.position.z);
+        playerCenter.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 
     // Update is called once per frame
@@ -46,10 +46,10 @@ public class PlayerController : MonoBehaviour
         //controller info - position: 0, 0.125f, 0.075f; rotation: 15, 0, 0;
         //hand info - position: 0.2f, 0, 0.1f; rotation: -2.5, 150, 110;
 
-        if (Vector2.Distance(new Vector2(playerCenter.position.x, playerCenter.position.z), new Vector2(transform.position.x, transform.position.z)) > 1f)
+        if (Vector2.Distance(new Vector2(playerCenter.position.x, playerCenter.position.z), new Vector2(transform.position.x, transform.position.z)) >= 0.5f)
         {
             Debug.Log("teleported");
-            playerCenter.position = new Vector3(transform.position.x, 0, transform.position.z);
+            playerCenter.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
         }
         if (Mathf.Abs(playerCenter.rotation.eulerAngles.y - transform.rotation.eulerAngles.y) > 1f)
         {

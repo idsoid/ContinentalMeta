@@ -147,10 +147,11 @@ public class RobotController : MonoBehaviour
                         {
                             rackOn = false;
                             deliveryAreaObj.transform.rotation = rackObj.transform.rotation;
-                            Destroy(rackObj);
+                            customPackage = null;
                         }
                         StartCoroutine(DisableDelivery());
                         deliveryAreaObj.SetActive(true);
+                        Destroy(rackObj);
                         currentState = States.BACKUP;
                         meshAgent.updateRotation = false;
                         Move(deliverypoint);
@@ -221,6 +222,7 @@ public class RobotController : MonoBehaviour
                         rackOn = true;
                         customPackage.SetParent(transform);
                         gameManager.PlayerNavObstacle().enabled = true;
+                        meshAgent.speed = 0.75f;
                         meshAgent.stoppingDistance = 2.0f;
                         currentState = States.FOLLOW;
                         Move(player);
@@ -237,6 +239,7 @@ public class RobotController : MonoBehaviour
                     {
                         rackOn = false;
                         customPackage.SetParent(null);
+                        customPackage.tag = "Delivered";
                         currentState = States.MANUALBACKUP;
                         meshAgent.updateRotation = false;
                         Move(goToPoint);
@@ -257,6 +260,7 @@ public class RobotController : MonoBehaviour
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
                     gameManager.PlayerNavObstacle().enabled = true;
+                    meshAgent.speed = 0.75f;
                     meshAgent.stoppingDistance = 2.0f;
                     Move(player);
                 }
@@ -299,8 +303,8 @@ public class RobotController : MonoBehaviour
                 break;
             case "FOLLOW":
                 gameManager.PlayerNavObstacle().enabled = false;
-                meshAgent.speed = 1f;
-                meshAgent.stoppingDistance = 1.5f;
+                meshAgent.speed = 0.75f;
+                meshAgent.stoppingDistance = 2.5f;
                 meshAgent.autoBraking = false;
                 currentState = States.FOLLOW;
                 break;

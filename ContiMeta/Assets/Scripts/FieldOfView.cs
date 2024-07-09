@@ -88,6 +88,7 @@ public class FieldOfView : MonoBehaviour
                     return;
                 }
             }
+            playerSpotted = false;
             return;
         }
 
