@@ -64,24 +64,25 @@ public class RobotController : MonoBehaviour
     }
     void FixedUpdate()
     {
-        StartCoroutine(FSM());
+        FSM();
     }
 
-    private IEnumerator FSM()
+    private void FSM()
     {
+        Vector3 targetPos = new();
         switch (currentState)
         {
             case States.DELIVER:
                 if (rackOn)
                 {
                     Move(deliverypoint);
+                    targetPos = deliverypoint.position;
                 }
                 else
                 {
                     Move(rackPoint);
+                    targetPos = rackPoint.position;
                 }
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-
                 //Check if near/at destination
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
@@ -101,7 +102,7 @@ public class RobotController : MonoBehaviour
                         }
                     }
                     //Continue path
-                    else
+                    else if (Vector3.Distance(targetPos, transform.position) <= 2.0f)
                     {
                         if (rackOn)
                         {
@@ -114,13 +115,14 @@ public class RobotController : MonoBehaviour
                             currentState = States.PICKUP;
                             Move(rackArea);
                         }
+                        meshAgent.avoidancePriority = 1;
                     }
                 }
                 break;
             case States.PICKUP:
                 Move(rackArea);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                targetPos = rackArea.position;
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance && Vector3.Distance(targetPos, transform.position) <= 2.0f)
                 {
                     animator.SetInteger("LiftPhase", 1);
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleUp"))
@@ -131,14 +133,15 @@ public class RobotController : MonoBehaviour
                         customPackage = rackObj.transform;
                         StartCoroutine(EnableRack());
                         currentState = States.DELIVER;
+                        meshAgent.avoidancePriority = 50;
                         Move(deliverypoint);
                     }
                 }
                 break;
             case States.PUTDOWN:
                 Move(deliveryArea);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                targetPos = deliveryArea.position;
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance && Vector3.Distance(targetPos, transform.position) <= 2.0f)
                 {
                     animator.SetInteger("LiftPhase", 0);
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
@@ -160,11 +163,12 @@ public class RobotController : MonoBehaviour
                 break;
             case States.BACKUP:
                 Move(deliverypoint);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                targetPos = deliverypoint.position;
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance && Vector3.Distance(targetPos, transform.position) <= 2.0f)
                 {
                     currentState = States.DELIVER;
                     meshAgent.updateRotation = true;
+                    meshAgent.avoidancePriority = 50;
                     Move(rackPoint);
                 }
                 break;
@@ -183,21 +187,26 @@ public class RobotController : MonoBehaviour
                 else
                 {
                     Move(player);
-                    yield return new WaitUntil(() => !meshAgent.pathPending);
-                    if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                    targetPos = player.position;
+                    if (Vector3.Distance(targetPos, transform.position) <= 2.0f)
                     {
+                        meshAgent.speed = 0;
                         Vector3 lookPos = player.position - transform.position;
                         lookPos.y = 0;
                         Quaternion rotation = Quaternion.LookRotation(lookPos);
                         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime);
                     }
+                    else
+                    {
+                        meshAgent.speed = 0.75f;
+                    }
                 }
                 break;
             case States.MANUALGOTO:
                 Move(goToPoint);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
+                    gameManager.PlayerNavObstacle().enabled = false;
                     if (rackOn)
                     {
                         currentState = States.MANUALPUTDOWN;
@@ -213,8 +222,8 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALPICKUP:
                 Move(customPackage);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                targetPos = customPackage.position;
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance && Vector3.Distance(targetPos, transform.position) <= 0.5f)
                 {
                     animator.SetInteger("LiftPhase", 1);
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleUp"))
@@ -223,7 +232,8 @@ public class RobotController : MonoBehaviour
                         customPackage.SetParent(transform);
                         gameManager.PlayerNavObstacle().enabled = true;
                         meshAgent.speed = 0.75f;
-                        meshAgent.stoppingDistance = 2.0f;
+                        meshAgent.stoppingDistance = 2.5f;
+                        meshAgent.avoidancePriority = 50;
                         currentState = States.FOLLOW;
                         Move(player);
                     }
@@ -231,8 +241,8 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALPUTDOWN:
                 Move(customDeliveryArea);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                targetPos = customDeliveryArea.position;
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance && Vector3.Distance(targetPos, transform.position) <= 0.5f)
                 {
                     animator.SetInteger("LiftPhase", 0);
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("IdleDown"))
@@ -248,8 +258,8 @@ public class RobotController : MonoBehaviour
                 break;
             case States.MANUALBACKUP:
                 Move(goToPoint);
-                yield return new WaitUntil(() => !meshAgent.pathPending);
-                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
+                targetPos = goToPoint.position;
+                if (meshAgent.remainingDistance <= meshAgent.stoppingDistance && Vector3.Distance(targetPos, transform.position) <= 2.0f)
                 {
                     if (customPackage != null)
                     {
@@ -261,17 +271,22 @@ public class RobotController : MonoBehaviour
                     meshAgent.updateRotation = true;
                     gameManager.PlayerNavObstacle().enabled = true;
                     meshAgent.speed = 0.75f;
-                    meshAgent.stoppingDistance = 2.0f;
+                    meshAgent.stoppingDistance = 2.5f;
+                    meshAgent.avoidancePriority = 50;
                     Move(player);
                 }
                 break;
             case States.STUCK:
+                meshAgent.radius = 0.1f;
                 meshAgent.SetDestination(lastTarget);
+                Collider[] pointColliders = Physics.OverlapSphere(transform.position, 4f, 1 << 8);
+                Debug.Log(this.name + " robot colliders: " + pointColliders.Length);
                 //Check if path is free
-                if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete && pointColliders.Length <= 1)
                 {
                     currentState = previousState;
                     meshAgent.speed = 0.5f;
+                    meshAgent.radius = 3.0f;
                     meshAgent.SetDestination(lastTarget);
                 }
                 break;
@@ -310,10 +325,12 @@ public class RobotController : MonoBehaviour
                 break;
             case "MANUALPICKUP":
                 DefaultAgentSettings();
+                meshAgent.avoidancePriority = 1;
                 StartCoroutine(NearestPoint(customPackage));
                 break;
             case "MANUALPUTDOWN":
                 DefaultAgentSettings();
+                meshAgent.avoidancePriority = 1;
                 StartCoroutine(NearestPoint(customDeliveryArea));
                 break;
             case "STATUS":
@@ -327,6 +344,10 @@ public class RobotController : MonoBehaviour
     {
         if (currentState == States.MANUALGOTO || currentState == States.MANUALPICKUP || currentState == States.MANUALPUTDOWN || currentState == States.MANUALBACKUP || 
             currentState == States.PICKUP || currentState == States.PUTDOWN || currentState == States.BACKUP)
+        {
+            return true;
+        }
+        else if (currentState == States.STUCK && command != "STATUS")
         {
             return true;
         }
@@ -370,6 +391,7 @@ public class RobotController : MonoBehaviour
     {
         rackAreaObj.SetActive(false);
         yield return new WaitForSecondsRealtime(10f);
+        rackArea.GetComponent<NavMeshObstacle>().enabled = true;
         rackAreaObj.SetActive(true);
     }
     private IEnumerator NearestPoint(Transform mainItem)
@@ -386,8 +408,11 @@ public class RobotController : MonoBehaviour
             pointCount++;
 
             Vector3 pointPos = mainItem.transform.GetChild(i).position;
-            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 0.25f, 1 << 6);
-            Debug.Log(mainItem.transform.GetChild(i).name + ": player too close");
+            Collider[] pointColliders = Physics.OverlapSphere(pointPos, 0.1f, 1 << 6);
+            if (pointColliders.Length > 0)
+            {
+                Debug.Log(mainItem.transform.GetChild(i).name + ": player too close");
+            }
             if (NavMesh.SamplePosition(pointPos, out NavMeshHit hit, 0.25f, NavMesh.AllAreas))
             {
                 meshAgent.SetDestination(hit.position);
@@ -413,7 +438,7 @@ public class RobotController : MonoBehaviour
             }
             Debug.Log(mainItem.transform.GetChild(i).name + " distance: " + distance);
 
-            if (pointColliders.Length > 0 || distance >= 5.0f)
+            if (pointColliders.Length > 0 || distance >= 15.0f)
             {
                 Debug.Log("invalid: " + mainItem.transform.GetChild(i).name);
                 invalidPoints.Add(i);
@@ -423,8 +448,8 @@ public class RobotController : MonoBehaviour
         {
             Debug.Log("invalid points on item");
             gameManager.PlayerNavObstacle().enabled = false;
-            meshAgent.speed = 0.5f;
-            meshAgent.stoppingDistance = 1.5f;
+            meshAgent.speed = 0.75f;
+            meshAgent.stoppingDistance = 2.5f;
             meshAgent.autoBraking = false;
             currentState = States.FOLLOW;
             yield break;
@@ -450,6 +475,7 @@ public class RobotController : MonoBehaviour
             }
         }
         goToPoint = mainItem.transform.GetChild(rackNearestPoint);
+        meshAgent.speed = 0.5f;
         currentState = States.MANUALGOTO;
     }
     private IEnumerator StatusCheck()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using TMPro;
 
 public class WarehouseManager : MonoBehaviour
@@ -22,10 +23,10 @@ public class WarehouseManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> packages;
     private List<bool> robotStatus = new() { false, false, false, false };
-    private List<bool> robotFollow = new() { false, false };
+    private List<bool> robotFollow = new() { false, false, false, false };
     private List<bool> robotStop = new() { false, false, false, false };
     private int statusCount, followCount, stopCount = 0;
-    private bool robotStuck = true;
+    private bool robotStuck = false;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +38,11 @@ public class WarehouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (robotCheck[2].GetComponent<RobotController>().currentState == RobotController.States.STUCK && !robotStuck)
+        {
+            robotStuck = true;
+        }
+
         //Task 1
         if (robotCheck[0].StoreCommand != "" && !robot1Active)
         {
@@ -64,6 +70,7 @@ public class WarehouseManager : MonoBehaviour
         //Task 3
         if (statusCount < 4)
         {
+            statusCount = 0;
             for (int i = 0; i < robotCheck.Count; i++)
             {
                 if (robotCheck[i].StoreCommand == "STATUS" && !robotStatus[i])
@@ -87,6 +94,7 @@ public class WarehouseManager : MonoBehaviour
         //Task 4
         if (followCount < 2)
         {
+            followCount = 0;
             for (int i = 0; i < robotCheck.Count; i++)
             {
                 if (robotCheck[i].StoreCommand == "FOLLOW" && !robotFollow[i])
@@ -110,6 +118,7 @@ public class WarehouseManager : MonoBehaviour
         //Task 5
         if (stopCount < 4)
         {
+            stopCount = 0;
             for (int i = 0; i < robotCheck.Count; i++)
             {
                 if (robotCheck[i].StoreCommand == "STOP" && !robotStop[i])
