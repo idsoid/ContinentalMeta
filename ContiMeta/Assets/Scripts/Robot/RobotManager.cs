@@ -30,11 +30,11 @@ public class RobotManager : MonoBehaviour
     }
     public bool PlayerSpotted()
     {
-        return robotView.GetPlayerSpotted();
+        return robotView.PlayerSpotted;
     }
     public bool PlayerInRange()
     {
-        return robotView.GetPlayerInRange();
+        return robotView.PlayerInRange;
     }
     public void Restart()
     {

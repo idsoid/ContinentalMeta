@@ -206,7 +206,7 @@ public class RobotController : MonoBehaviour
                 Move(goToPoint);
                 if (meshAgent.remainingDistance <= meshAgent.stoppingDistance)
                 {
-                    gameManager.PlayerNavObstacle().enabled = false;
+                    gameManager.PlayerNavObstacle.enabled = false;
                     if (rackOn)
                     {
                         currentState = States.MANUALPUTDOWN;
@@ -230,7 +230,7 @@ public class RobotController : MonoBehaviour
                     {
                         rackOn = true;
                         customPackage.SetParent(transform);
-                        gameManager.PlayerNavObstacle().enabled = true;
+                        gameManager.PlayerNavObstacle.enabled = true;
                         meshAgent.speed = 0.75f;
                         meshAgent.stoppingDistance = 2.5f;
                         meshAgent.avoidancePriority = 50;
@@ -269,7 +269,7 @@ public class RobotController : MonoBehaviour
                     }
                     currentState = States.FOLLOW;
                     meshAgent.updateRotation = true;
-                    gameManager.PlayerNavObstacle().enabled = true;
+                    gameManager.PlayerNavObstacle.enabled = true;
                     meshAgent.speed = 0.75f;
                     meshAgent.stoppingDistance = 2.5f;
                     meshAgent.avoidancePriority = 50;
@@ -317,7 +317,7 @@ public class RobotController : MonoBehaviour
                 currentState = States.STOP;
                 break;
             case "FOLLOW":
-                gameManager.PlayerNavObstacle().enabled = false;
+                gameManager.PlayerNavObstacle.enabled = false;
                 meshAgent.speed = 0.75f;
                 meshAgent.stoppingDistance = 2.5f;
                 meshAgent.autoBraking = false;
@@ -366,7 +366,7 @@ public class RobotController : MonoBehaviour
     }
     private void DefaultAgentSettings()
     {
-        gameManager.PlayerNavObstacle().enabled = true;
+        gameManager.PlayerNavObstacle.enabled = true;
         meshAgent.speed = 0.5f;
         meshAgent.stoppingDistance = 0;
         meshAgent.autoBraking = true;
@@ -447,7 +447,7 @@ public class RobotController : MonoBehaviour
         if (invalidPoints.Count >= pointCount)
         {
             Debug.Log("invalid points on item");
-            gameManager.PlayerNavObstacle().enabled = false;
+            gameManager.PlayerNavObstacle.enabled = false;
             meshAgent.speed = 0.75f;
             meshAgent.stoppingDistance = 2.5f;
             meshAgent.autoBraking = false;

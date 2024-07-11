@@ -78,6 +78,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
     
+    //Gesture Hologram
     public void ToggleGesture()
     {
         foreach (var gesture in gestureList)
@@ -115,6 +116,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    //Tutorial Steps and Guide
     private void StepByStep()
     {
         switch (tutorialStep)

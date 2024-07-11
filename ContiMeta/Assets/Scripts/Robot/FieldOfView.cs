@@ -6,9 +6,11 @@ using UnityEngine.AI;
 public class FieldOfView : MonoBehaviour
 {
     public float radius, angle;
-    public LayerMask targetMask, obstructionMask, forkliftMask;
+    public LayerMask targetMask, obstructionMask;
     private IEnumerator coroutine;
-    public bool playerInRange, playerSpotted, forkliftSpotted;
+    public bool playerInRange, playerSpotted;
+    public bool PlayerInRange { get => playerInRange; }
+    public bool PlayerSpotted { get => playerSpotted; }
 
     [SerializeField]
     private MeshFilter meshFilter;
@@ -94,14 +96,6 @@ public class FieldOfView : MonoBehaviour
 
         playerInRange = false;
         playerSpotted = false;
-    }
-    public bool GetPlayerSpotted()
-    {
-        return playerSpotted;
-    }
-    public bool GetPlayerInRange()
-    {
-        return playerInRange;
     }
 
     //https://www.youtube.com/watch?v=luLrhoTZYD8

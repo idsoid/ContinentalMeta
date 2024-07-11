@@ -12,19 +12,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     private VideoPlayer firstVid, recurringVid;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //StartCoroutine(LoadInBackground());
-        //StartCoroutine(LoadAfterVid());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Loads scene while video plays
     private IEnumerator LoadInBackground(VideoPlayer vidPlayer)
     {
         yield return null;
@@ -41,6 +29,7 @@ public class MenuManager : MonoBehaviour
         }
     }
     
+    //Checks which toggle was selected and plays video accordingly
     public void PlayerType()
     {
         foreach (var toggle in toggleGroup.ActiveToggles())

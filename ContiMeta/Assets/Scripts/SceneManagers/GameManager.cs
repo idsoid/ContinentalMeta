@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
-using Oculus.Interaction.Locomotion;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,28 +24,21 @@ public class GameManager : MonoBehaviour
     private List<GameObject> robotFOV;
     [SerializeField]
     private NavMeshObstacle playerNavObstacle;
+    public NavMeshObstacle PlayerNavObstacle { get => playerNavObstacle; }
     [SerializeField]
     private Transform playerRightHand, playerLeftHand, playerCenter;
-    private int closestPackage;
-    private int closestDeliveryArea;
+    private int closestPackage, closestDeliveryArea;
     [SerializeField]
     private List<MeshRenderer> meshRenderers;
     [SerializeField]
     private List<RobotManager> robotList;
     public NavMeshSurface navMeshSurface;
-    public List<float> scanTimer;
-    public List<bool> startTimer;
     public string currentPose;
     public bool menuActive = false;
     [SerializeField]
     private List<GameObject> menuPanels;
     public int menuPanel = 0;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -122,11 +113,6 @@ public class GameManager : MonoBehaviour
     }
     public void PoseCommand(int robotID, string command)
     {
-        //if (menuActive)
-        //{
-        //    return;
-        //}
-
         meshRenderers[robotID].material.color = command switch
         {
             "GO" => Color.green,
@@ -223,10 +209,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-    }
-    public NavMeshObstacle PlayerNavObstacle()
-    {
-        return playerNavObstacle;
     }
     public void PackageCheck(Transform hand, int robotID)
     {

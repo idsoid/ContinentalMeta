@@ -149,3 +149,5 @@ public class Typewriter : MonoBehaviour
         currentMsg = messages[msgIndex];
     }
 }
+
+//https://medium.com/@jonbednez/how-to-create-typewriter-effect-in-ui-with-unity-a-step-by-step-tutorial-bcd6d33d86d4
