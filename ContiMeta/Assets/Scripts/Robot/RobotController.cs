@@ -69,7 +69,7 @@ public class RobotController : MonoBehaviour
 
     private void FSM()
     {
-        Vector3 targetPos = new();
+        Vector3 targetPos;
         switch (currentState)
         {
             case States.DELIVER:

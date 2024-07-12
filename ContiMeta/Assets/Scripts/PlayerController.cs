@@ -27,13 +27,13 @@ public class PlayerController : MonoBehaviour
             {
                 gameManager.ToggleMenu();
             }
-            canvasCommandPopupController.SetActive(gameManager.GetMenuActive());
+            canvasCommandPopupController.SetActive(gameManager.MenuActive);
             canvasCommandPopupHand.SetActive(false);
         }
         else if (OVRPlugin.GetConnectedControllers() == OVRPlugin.Controller.Hands)
         {
             Debug.Log("hands enabled");
-            canvasCommandPopupHand.SetActive(gameManager.GetMenuActive());
+            canvasCommandPopupHand.SetActive(gameManager.MenuActive);
             canvasCommandPopupController.SetActive(false);
         }
         else

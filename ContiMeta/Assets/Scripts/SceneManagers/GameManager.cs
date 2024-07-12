@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     public NavMeshSurface navMeshSurface;
     public string currentPose;
     public bool menuActive = false;
+    public bool MenuActive { get => menuActive; }
     [SerializeField]
     private List<GameObject> menuPanels;
     public int menuPanel = 0;
@@ -82,6 +83,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    //Menu Stuff
     public void ToggleMenu()
     {
         menuActive = !menuActive;
@@ -107,10 +110,8 @@ public class GameManager : MonoBehaviour
             fov.SetActive(!fov.activeSelf);
         }
     }
-    public bool GetMenuActive()
-    {
-        return menuActive;
-    }
+
+    //Commands
     public void PoseCommand(int robotID, string command)
     {
         meshRenderers[robotID].material.color = command switch
@@ -210,6 +211,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    //Pickup and Putdown Checks
     public void PackageCheck(Transform hand, int robotID)
     {
         Collider[] packages = Physics.OverlapSphere(hand.position, 3.0f, 1 << 9);
@@ -248,6 +251,8 @@ public class GameManager : MonoBehaviour
         }
         robotList[robotID].SendDeliveryArea(packages[closestDeliveryArea].transform);
     }
+
+    //Debug Test
     public void DebugTestMessage(string text)
     {
         Debug.Log(this.name + ": " + text);

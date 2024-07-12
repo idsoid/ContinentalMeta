@@ -17,12 +17,6 @@ public class ExitScript : MonoBehaviour
     private bool handIn = false;
     private float handInTimer = 0.0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
