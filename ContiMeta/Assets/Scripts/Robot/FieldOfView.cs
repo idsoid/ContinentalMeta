@@ -7,7 +7,6 @@ public class FieldOfView : MonoBehaviour
 {
     public float radius, angle;
     public LayerMask targetMask, obstructionMask;
-    private IEnumerator coroutine;
     public bool playerInRange, playerSpotted;
     public bool PlayerInRange { get => playerInRange; }
     public bool PlayerSpotted { get => playerSpotted; }
@@ -19,8 +18,7 @@ public class FieldOfView : MonoBehaviour
 
     void Start()
     {
-        coroutine = FOVRoutine();
-        StartCoroutine(coroutine);
+        StartCoroutine(FOVRoutine());
         visionConeMesh = new Mesh();
     }
 

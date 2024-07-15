@@ -279,7 +279,7 @@ public class RobotController : MonoBehaviour
             case States.STUCK:
                 meshAgent.radius = 0.1f;
                 meshAgent.SetDestination(lastTarget);
-                Collider[] pointColliders = Physics.OverlapSphere(transform.position, 4f, 1 << 8);
+                Collider[] pointColliders = Physics.OverlapSphere(transform.position, 5f, 1 << 8);
                 Debug.Log(this.name + " robot colliders: " + pointColliders.Length);
                 //Check if path is free
                 if (meshAgent.pathStatus == NavMeshPathStatus.PathComplete && pointColliders.Length <= 1)
